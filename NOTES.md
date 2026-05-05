@@ -81,3 +81,37 @@ codex resume --last   # jump straight into last session
 - Commit the stray `.claude/` folder so `git status` stops showing it as untracked.
 - Get back to actually editing the mockup — the editable-* HTML files for copy/layout, `editable-mockup.css` for colors/spacing/typography.
 - Decide if the design direction is staying with the blue+white editable mockup or revisiting elements of the black+orange originals.
+
+## Useful libraries / services to look at later
+
+When ready to add real features to the app, these are widely-used and worth bookmarking. **Don't install yet** — pick one when there's a specific need, then ask Claude or Codex to walk through wiring it in.
+
+### UI / "skins" (visual components)
+
+- **shadcn/ui** — https://ui.shadcn.com — copy-paste React components, beautiful and modern. Probably the most useful single resource. No real install — you copy component code into the project.
+- **Aceternity UI** — https://ui.aceternity.com — fancier animated components for polish.
+- **lucide-react** — clean icon set. Already installed in this project.
+
+### Backend services (full hosted services with libraries on GitHub)
+
+- **Clerk** — https://clerk.com — drop-in user signup/login. ~5 minutes to set up.
+- **Supabase** — https://supabase.com — full backend in a box: database, auth, file storage. Generous free tier.
+- **Stripe** — https://stripe.com — handles payments. Useful for the free vs. paid access mentioned in the engineering spec.
+
+### Music/guitar-specific libraries
+
+- **Tone.js** — audio synthesis and playback. Already installed in this project.
+- **VexFlow** — https://www.vexflow.com — music notation rendering. For displaying sheet music or tabs.
+- **WaveSurfer.js** — https://wavesurfer.xyz — audio waveform visualization. Useful for practice playback UI.
+
+### Three patterns for "using" GitHub stuff
+
+Listed easiest to hardest:
+
+1. **Copy-paste components** (shadcn-style) — copy code from a website, paste into the project. No install.
+2. **Install a library** — one terminal command (`pnpm add <package>`), then `import` it in code.
+3. **Clone a starter template** — `git clone <repo-url>` to copy a whole app as a starting point.
+
+### Important rule
+
+Don't grab random repos that look cool unless someone trusted (or an AI agent) confirms they're worth using. Lots of half-finished or abandoned code on GitHub. The names listed above are widely used and well-maintained — safe defaults.
