@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guitarmalade SAUCE App v2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script type="text/babel" src="ios-frame.jsx"></script>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="sauce-v2-screens.jsx"></script>
+  <script type="text/babel" src="sauce-notation.jsx"></script>
+  <script type="text/babel" src="sauce-recorder.jsx"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; background: #050505;
+      background: radial-gradient(ellipse at 50% 0%, #1a0800 0%, #050505 55%);
+    }
+    ::-webkit-scrollbar { width: 0; height: 0; }
+    button, textarea, input { font-family: inherit; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "theme": "kitchen",
+      "sessionMins": 30,
+      "showStreak": true,
+      "xpOverride": 1240
+    }/*EDITMODE-END*/;
+
+    // ── Bottom Nav ──────────────────────────────────────────────────────────────
+    const NAV_ITEMS = [
+      { id: 'home',     label: 'Home',     glyph: '⌂'  },
+      { id: 'practice', label: 'Practice', glyph: '▶'  },
+      { id: 'progress', label: 'Progress', glyph: '◈'  },
+      { id: 'profile',  label: 'Profile',  glyph: '◉'  },
+    ];
+
+    function BottomNav({ active, onNav, theme }) {
+      return (
+        <div style={{
+          height: 58, background: theme.surface,
+          borderTop: `1px solid ${theme.border}`,
+          display: 'flex', flexShrink: 0,
+        }}>
+          {NAV_ITEMS.map(item => {
+            const on = item.id === active;
+            return (
+              <div key={item.id} onClick={() => onNav(item.id)} style={{
+                flex: 1, display: 'flex', flexDirection: 'column',
+                alignItems: 'center', justifyContent: 'center',
+                gap: 3, cursor: 'pointer',
+              }}>
+                <div style={{ fontSize: 17, color: on ? theme.accent : '#444', transition: 'color .2s' }}>{item.glyph}</div>
+                <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 9, letterSpacing: 0.8,
+                  textTransform: 'uppercase', color: on ? theme.accent : '#444', fontWeight: on ? 700 : 400 }}>
+                  {item.label}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+
+    // ── Simple Profile Screen ────────────────────────────────────────────────────
+    function ProfileScreen({ profile, theme, onReset }) {
+      const xp = profile.xp || 1240;
+      const lv = getLevel(xp);
+      return (
+        <div style={{ height: '100%', display: 'flex', flexDirection: 'column', background: theme.bg, overflowY: 'auto' }}>
+          <div style={{ padding: '20px 20px 14px', display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div style={{ width: 54, height: 54, borderRadius: 14, background: `linear-gradient(135deg,${theme.accent},#FFD600)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <span style={{ fontFamily: "'Bebas Neue',cursive", fontSize: 22, color: '#000' }}>GM</span>
+            </div>
+            <div>
+              <div style={{ fontFamily: "'Bebas Neue',cursive", fontSize: 24, color: theme.text, letterSpacing: 1 }}>{lv.rank}</div>
+              <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 12, color: theme.textSub }}>Level {lv.index + 1} · {xp.toLocaleString()} XP</div>
+            </div>
+          </div>
+
+          {/* I AM */}
+          <div style={{ margin: '0 20px 16px', background: theme.surface, borderRadius: theme.radius, padding: '14px 16px', border: `1px solid ${theme.border}`, borderLeft: `3px solid ${theme.accent}` }}>
+            <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 9, color: theme.accent, letterSpacing: 2, marginBottom: 6, textTransform: 'uppercase' }}>I AM Statement</div>
+            <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 13, color: theme.textSub, lineHeight: 1.6, fontStyle: 'italic' }}>
+              "{profile.iam || 'I am so thankful that I play with confidence, musicality, and my own unique voice.'}"
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div style={{ padding: '0 20px 14px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            {[
+              { label: 'Day Streak',  val: profile.streak || 12, sub: 'days',     col: theme.accent },
+              { label: 'Sessions',    val: 42,                   sub: 'total',    col: '#FFAA00'    },
+              { label: 'SAUCE Step',  val: SAUCE[profile.sauceIndex||1].key, sub: SAUCE[profile.sauceIndex||1].label, col: SAUCE[profile.sauceIndex||1].color },
+              { label: 'Hours',       val: 31,                   sub: 'practiced',col: '#FF8C00'    },
+            ].map(s => (
+              <div key={s.label} style={{ background: theme.surface, borderRadius: theme.radius, padding: '14px 14px', border: `1px solid ${theme.border}` }}>
+                <div style={{ fontFamily: "'Bebas Neue',cursive", fontSize: 34, color: s.col, lineHeight: 1 }}>{s.val}</div>
+                <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 9, color: theme.textMuted, marginTop: 2 }}>{s.sub}</div>
+                <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 10, color: theme.textSub, marginTop: 3 }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Theme indicator */}
+          <div style={{ margin: '0 20px 14px', background: theme.surface, borderRadius: theme.radius, padding: '12px 14px', border: `1px solid ${theme.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 10, color: theme.textSub, letterSpacing: 1 }}>CURRENT THEME</div>
+              <div style={{ fontFamily: "'Bebas Neue',cursive", fontSize: 18, color: theme.accent, letterSpacing: 1, marginTop: 2 }}>{theme.name}</div>
+            </div>
+            <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 10, color: theme.textSub, fontStyle: 'italic' }}>{theme.tag}</div>
+          </div>
+
+          <div style={{ padding: '0 20px 28px' }}>
+            <button onClick={onReset} style={{ width: '100%', height: 44, borderRadius: theme.radius, border: `1px solid ${theme.border}`, background: 'transparent', color: theme.textSub, fontFamily: "'Space Grotesk',sans-serif", fontSize: 13, cursor: 'pointer' }}>
+              Reset & Re-onboard
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    // ── App ─────────────────────────────────────────────────────────────────────
+    function App() {
+      const { useTweaks, TweaksPanel, TweakSection, TweakColor, TweakSlider, TweakToggle, TweakRadio, TweakSelect } = window;
+      const [tweaks, setTweaks] = useTweaks(TWEAK_DEFAULTS);
+      const theme = THEMES[tweaks.theme] || THEMES.kitchen;
+
+      const [screen, setScreen] = useState('splash');
+      const [tab, setTab] = useState('home');
+      const [practicePhase, setPracticePhase] = useState('select'); // select | active | blastoff
+      const [practiceMode, setPracticeMode] = useState(null);
+      
+      const [monkMode, setMonkMode] = useState(false);
+
+      const [profile, setProfile] = useState(() => {
+        try { const s = localStorage.getItem('gm_v2_profile'); return s ? JSON.parse(s) : null; }
+        catch { return null; }
+      });
+
+      useEffect(() => {
+        if (profile) localStorage.setItem('gm_v2_profile', JSON.stringify(profile));
+      }, [profile]);
+
+      const nav = (t) => {
+        setTab(t);
+        if (t === 'practice') { setPracticePhase('select'); }
+      };
+
+      const handleSplashDone = () => setScreen(profile ? 'app' : 'assessment');
+
+      const handleAssessmentDone = (data) => {
+        setProfile({ iam: data.iam, skills: data.skills, hpw: data.hpw, xp: 0, streak: 1, sauceIndex: 0 });
+        setScreen('app');
+      };
+
+      const handleBlastOffDone = ({ xpEarned = 200 } = {}) => {
+        setProfile(p => ({ ...p, xp: (p.xp || 0) + xpEarned }));
+        setPracticePhase('select');
+        setTab('home');
+      };
+
+      const renderPractice = () => {
+        switch (practicePhase) {
+          case 'select':  return <PracticeModeScreen theme={theme} onSelect={mode => { setPracticeMode(mode); setPracticePhase('active'); }} />;
+          case 'active':  return <ActivePracticeScreen mode={practiceMode} theme={theme} onBlastOff={() => setPracticePhase('blastoff')} />;
+          case 'blastoff':return <BlastOffScreen theme={theme} onDone={handleBlastOffDone} />;
+          default: return null;
+        }
+      };
+
+      const renderTab = () => {
+        if (!profile) return null;
+        const p = { ...profile, xp: tweaks.xpOverride || profile.xp };
+        switch (tab) {
+          case 'home':     return <DashboardScreen profile={p} theme={theme} onStartPractice={() => nav('practice')} monkMode={monkMode} onToggleMonk={() => setMonkMode(m => !m)} />;
+          case 'practice': return renderPractice();
+          case 'progress': return <ProgressScreen profile={p} theme={theme} />;
+          case 'profile':  return <ProfileScreen profile={p} theme={theme} onReset={() => { localStorage.removeItem('gm_v2_profile'); setProfile(null); setScreen('assessment'); }} />;
+          default: return null;
+        }
+      };
+
+      const appUI = (
+        <div style={{ height: '100%', display: 'flex', flexDirection: 'column', background: theme.bg }}>
+          <div style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>{renderTab()}</div>
+          <BottomNav active={tab} onNav={nav} theme={theme} />
+        </div>
+      );
+
+      const content = (() => {
+        if (screen === 'splash')     return <SplashV2 onDone={handleSplashDone} />;
+        if (screen === 'assessment') return <AssessmentScreen onDone={handleAssessmentDone} theme={theme} />;
+        return appUI;
+      })();
+
+      return (
+        <>
+          <IOSDevice dark={true} width={390} height={844}>
+            {content}
+          </IOSDevice>
+
+          <TweaksPanel tweaks={tweaks} setTweaks={setTweaks}>
+            <TweakSection title="Visual Direction">
+              <TweakRadio id="theme" label="Theme" options={[
+                { label: '🍳 Kitchen', value: 'kitchen' },
+                { label: '⚡ Stage',   value: 'stage'   },
+                { label: '🎯 Monk',    value: 'monk'     },
+              ]} />
+            </TweakSection>
+            <TweakSection title="Practice">
+              <TweakSlider id="sessionMins" label="Session Length" min={5} max={90} step={5} unit=" min" />
+            </TweakSection>
+            <TweakSection title="Dev / Demo">
+              <TweakSlider id="xpOverride" label="XP (demo)" min={0} max={7500} step={50} />
+              <TweakToggle id="showStreak" label="Show Streak" />
+            </TweakSection>
+          </TweaksPanel>
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
