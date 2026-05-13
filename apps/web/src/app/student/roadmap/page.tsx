@@ -71,27 +71,9 @@ export default async function PersonalizedRoadmapPage() {
   const VBW = 1000, VBH = 2500;
 
   return (
-    <div className="min-h-screen bg-[var(--bg)] relative overflow-hidden pb-20">
+    <>
       <SplatBackdrop intensity="subtle" palette="warm" />
-
-      {/* Header */}
-      <header className="relative z-20 backdrop-blur-md bg-white/80 border-b border-[var(--line)] sticky top-0">
-        <div className="max-w-[1320px] mx-auto px-6 md:px-14 h-24 flex items-center gap-6">
-          <Link href="/student/dashboard" className="p-3 text-[var(--ink-mid)] hover:text-[var(--punch)] hover:bg-[rgba(230,54,120,.1)] rounded-xl transition-colors">
-            <ArrowLeft className="w-6 h-6" />
-          </Link>
-          <div>
-            <div className="text-[11px] font-extrabold uppercase tracking-[.18em] text-[var(--marmalade)]">
-              Personalized Path
-            </div>
-            <h1 className="text-3xl font-paint text-[var(--ink)] leading-none mt-0.5">
-              Your <span className="text-[var(--punch)]">Roadmap</span>
-            </h1>
-          </div>
-        </div>
-      </header>
-
-      <main className="relative z-10 max-w-4xl mx-auto px-6 md:px-14 py-12">
+      <main className="shell workspace relative z-10">
         <div className="mb-10 text-center">
           <h1 className="drip-text text-[56px] text-[var(--ink)] leading-none">
             The <span className="text-[var(--marmalade)]">Journey</span>
@@ -305,6 +287,6 @@ export default async function PersonalizedRoadmapPage() {
           </Link>
         </div>
       </main>
-    </div>
+    </>
   )
 }
