@@ -44,201 +44,170 @@ export default function KitchenClient({ exercise }: { exercise: any }) {
   const ss = String(seconds % 60).padStart(2, "0")
 
   return (
-    <main className="shell workspace relative z-10">
+    <div className="max-w-6xl mx-auto space-y-6">
       
-      <section className="hero-bar">
-        <div className="hero-title">
-          <Link href="/student/dashboard" className="back-pill hover:bg-gray-50 transition-colors">
-            <ArrowLeft className="w-6 h-6" />
-          </Link>
+      {/* Top bar */}
+      <div className="flex items-center gap-4">
+        <Link href="/student/roadmap" className="w-12 h-12 rounded-2xl bg-[var(--cream-warm)] border-2 border-[var(--ink)] shadow-[4px_4px_0_var(--ink)] text-[var(--ink)] flex items-center justify-center hover:-translate-y-1 hover:shadow-[6px_6px_0_var(--ink)] transition-all">
+          <ArrowLeft className="w-5 h-5" />
+        </Link>
+        <div className="flex-1">
+          <div className="flex items-center gap-2.5">
+            <div className="w-2.5 h-2.5 rounded-full" style={{ background: skill }}/>
+            <span className="text-[11px] font-extrabold tracking-[.18em] text-[var(--ink-mid)] uppercase">
+              {exercise.skill || 'BLUES'} · STAGE {exercise.stage || 'A'} · {exercise.stageName || 'ASSIMILATE'}
+            </span>
+          </div>
+          <h1 className="drip-text text-[48px] text-[var(--ink)] leading-none mt-1">
+            {exercise.title.split(" in ")[0]} <span style={{ color: skill }}>in E</span>
+          </h1>
+        </div>
+        <div className="hidden md:flex items-center gap-2">
+          <span className="px-4 py-2 rounded-full bg-[var(--cream-warm)] border-2 border-[var(--cream-shadow)] font-extrabold text-[13px] text-[var(--ink)]">⏱ {exercise.minutes || 15} min</span>
+          <span className="px-4 py-2 rounded-full bg-[var(--cream-warm)] border-2 border-[var(--cream-shadow)] font-extrabold text-[13px] text-[var(--ink)]">♪ {exercise.bpm || 90} BPM</span>
+          <span className="px-4 py-2 rounded-full bg-[var(--punch)] text-[var(--cream-warm)] font-extrabold text-[13px]">+{exercise.xp || 150} XP</span>
+        </div>
+      </div>
+
+      {/* Recipe path */}
+      <div className="relative p-5 md:p-7 bg-[var(--cream-warm)] rounded-[var(--r-lg)] border-2 border-[var(--cream-shadow)] overflow-hidden">
+        <Splat.Specks color={skill} size={120} seed={3} className="absolute top-2 right-3 opacity-30 pointer-events-none"/>
+        
+        <div className="flex items-center justify-between mb-4">
           <div>
-            <h1 className="drip-text text-[var(--ink)]">Now Sizzling...</h1>
-            <p className="panel-copy">{exercise.title.split(" in ")[0]} <span style={{ color: skill }}>in E</span> · Keep the groove locked.</p>
+            <span className="text-[11px] font-extrabold uppercase tracking-[.12em] text-[var(--marmalade)]">Recipe path</span>
+            <h3 className="drip-text text-[22px] text-[var(--ink)] mt-0.5">5 sections · cook them in order</h3>
+          </div>
+          <div className="text-[12px] font-extrabold text-[var(--ink-mid)]">
+            <span style={{ color: skill, fontFamily: "var(--font-paint)", fontSize: 22 }}>2</span> / 5 done
           </div>
         </div>
 
-        <div className="timer-pod border-[3px] border-[var(--ink)]">
-          <div className="timer-icon"><Play className="w-8 h-8" style={{ color: skill }}/></div>
-          <div className="timer-value text-[var(--cream-warm)]">
-            {mm}<span style={{ color: skill }}>:</span>{ss}
-          </div>
-          <button 
-            onClick={() => setTimerRunning(t => !t)}
-            className="button button-primary ml-4"
-            style={{ background: timerRunning ? 'var(--punch)' : skill, color: "var(--ink)", border: "2px solid var(--ink)", boxShadow: "3px 3px 0 var(--ink)" }}
-          >
-            {timerRunning ? "Pause" : "Start"}
-          </button>
-        </div>
-      </section>
-
-      <section className="content-grid">
-        <div className="column">
+        {/* Horizontal path */}
+        <div className="relative grid grid-cols-5 gap-0 items-start pt-3 pb-2">
+          <div className="absolute top-[36px] left-[10%] right-[10%] h-1.5 rounded-full z-0" 
+               style={{ background: 'repeating-linear-gradient(90deg, var(--cream-shadow) 0 8px, transparent 8px 16px)' }} />
           
-          <article className="panel featured">
-            <div className="panel-heading">
-              <span className="panel-icon bg-[var(--ink)] text-[var(--cream-warm)] border-2 border-[var(--ink)]">♫</span>
-              <h2 className="drip-text text-[var(--ink)]">{exercise.title.split(" in ")[0]}</h2>
+          <div className="absolute top-[36px] left-[10%] h-1.5 rounded-full z-10 transition-all duration-500"
+               style={{ width: `${(100 / subSteps.length) * 2}%`, background: skill }} />
+
+          {subSteps.map((s, i) => {
+            const active = i === activeStep
+            const stateColors = {
+              done: { bg: skill, fg: "var(--ink)", ring: "var(--ink)" },
+              current: { bg: "var(--ink)", fg: skill, ring: skill },
+              next: { bg: "var(--cream-warm)", fg: skill, ring: skill },
+              locked: { bg: "var(--cream-shadow)", fg: "var(--ink-faint)", ring: "var(--ink-faint)" },
+            }[s.state] || { bg: "var(--cream-shadow)", fg: "var(--ink-faint)", ring: "var(--ink-faint)" }
+
+            return (
+              <button 
+                key={s.i} 
+                onClick={() => s.state !== "locked" && setActiveStep(i)}
+                disabled={s.state === "locked"}
+                className={`relative z-20 flex flex-col items-center gap-1.5 transition-all ${s.state === 'locked' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+              >
+                <div 
+                  className="w-[50px] h-[50px] md:w-[60px] md:h-[60px] rounded-full flex items-center justify-center font-paint text-[26px] transition-all duration-300"
+                  style={{
+                    background: stateColors.bg, color: stateColors.fg,
+                    border: `3px ${s.state === "locked" ? "dashed" : "solid"} ${stateColors.ring}`,
+                    boxShadow: active ? `0 0 0 4px ${skill}33, 4px 4px 0 ${skill}` : "none",
+                    transform: active ? "translateY(-2px) scale(1.04)" : "none",
+                  }}
+                >
+                  {s.state === "done" ? "✓" : s.state === "locked" ? "🔒" : s.i}
+                </div>
+                <div className="text-center max-w-[100px] md:max-w-[130px]">
+                  <div className="text-[9px] font-extrabold tracking-[.18em] uppercase text-[var(--marmalade)]">BARS {s.bars}</div>
+                  <div className="mt-0.5 text-[12px] md:text-[13px] font-extrabold text-[var(--ink)] leading-tight">{s.title}</div>
+                </div>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Main split */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        
+        {/* Tab / Video */}
+        <div className="lg:col-span-2">
+          {exercise.video_url ? (
+            <div className="bg-[var(--ink)] rounded-[var(--r-lg)] p-1 overflow-hidden border-[3px] border-[var(--ink)] shadow-[var(--shadow-pop)] aspect-video relative group mb-6">
+              <video controls className="w-full h-full object-cover rounded-xl" src={exercise.video_url} />
             </div>
-            
-            <div className="chip-row mb-6">
-              <span className="chip text-[var(--blue-deep)]">{exercise.stageName || 'Assimilate'}</span>
-              <span className="chip">{exercise.bpm || 90} BPM</span>
-              <span className="chip">Free preview</span>
-            </div>
-            
-            {exercise.tab_url && (
-              <div className="media-card !p-2 !border-[3px] !border-solid !border-[var(--ink)] !bg-[var(--cream-warm)]">
+          ) : null}
+
+          {exercise.tab_url && (
+            <div className="bg-[var(--cream-warm)] rounded-[var(--r-lg)] border-[3px] border-[var(--ink)] shadow-[var(--shadow-pop)] overflow-hidden">
+              <div className="p-4 flex items-center justify-between bg-[var(--ink)] border-b-4" style={{ borderColor: skill }}>
+                <div className="flex items-center gap-3">
+                  <span className="text-[22px]">🎸</span>
+                  <div>
+                    <div className="text-[10px] font-extrabold tracking-[.16em] text-white/50">NOTATION</div>
+                    <div className="drip-text text-[18px] text-[var(--cream-warm)] leading-none mt-0.5">Scrolling tab</div>
+                  </div>
+                </div>
+              </div>
+              <div className="p-2">
                 <AlphaTabPlayer fileUrl={exercise.tab_url} />
               </div>
-            )}
-          </article>
-
-          <article className="panel">
-            <div className="panel-heading">
-              <span className="panel-icon border-2 border-[var(--ink)]" style={{ color: skill }}>◎</span>
-              <h2 className="drip-text text-[var(--ink)]">Recipe Path</h2>
             </div>
-            <p className="panel-copy mb-6">Master the progression section by section. Complete sections unlock the next phase.</p>
-            
-            {/* Horizontal path */}
-            <div className="relative grid grid-cols-5 gap-0 items-start pt-3 pb-2">
-              <div className="absolute top-[36px] left-[10%] right-[10%] h-1.5 rounded-full z-0" 
-                  style={{ background: 'repeating-linear-gradient(90deg, var(--cream-shadow) 0 8px, transparent 8px 16px)' }} />
-              
-              <div className="absolute top-[36px] left-[10%] h-1.5 rounded-full z-10 transition-all duration-500"
-                  style={{ width: `${(100 / subSteps.length) * 2}%`, background: skill }} />
-
-              {subSteps.map((s, i) => {
-                const active = i === activeStep
-                const stateColors = {
-                  done: { bg: skill, fg: "var(--ink)", ring: "var(--ink)" },
-                  current: { bg: "var(--ink)", fg: skill, ring: skill },
-                  next: { bg: "var(--cream-warm)", fg: skill, ring: skill },
-                  locked: { bg: "var(--cream-shadow)", fg: "var(--ink-faint)", ring: "var(--ink-faint)" },
-                }[s.state] || { bg: "var(--cream-shadow)", fg: "var(--ink-faint)", ring: "var(--ink-faint)" }
-
-                return (
-                  <button 
-                    key={s.i} 
-                    onClick={() => s.state !== "locked" && setActiveStep(i)}
-                    disabled={s.state === "locked"}
-                    className={`relative z-20 flex flex-col items-center gap-1.5 transition-all ${s.state === 'locked' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-                  >
-                    <div 
-                      className="w-[50px] h-[50px] md:w-[60px] md:h-[60px] rounded-full flex items-center justify-center font-paint text-[26px] transition-all duration-300"
-                      style={{
-                        background: stateColors.bg, color: stateColors.fg,
-                        border: `3px ${s.state === "locked" ? "dashed" : "solid"} ${stateColors.ring}`,
-                        boxShadow: active ? `0 0 0 4px ${skill}33, 4px 4px 0 ${skill}` : "none",
-                        transform: active ? "translateY(-2px) scale(1.04)" : "none",
-                      }}
-                    >
-                      {s.state === "done" ? "✓" : s.state === "locked" ? "🔒" : s.i}
-                    </div>
-                    <div className="text-center max-w-[100px] md:max-w-[130px]">
-                      <div className="text-[9px] font-extrabold tracking-[.18em] uppercase text-[var(--marmalade)]">BARS {s.bars}</div>
-                      <div className="mt-0.5 text-[12px] md:text-[13px] font-extrabold text-[var(--ink)] leading-tight">{s.title}</div>
-                    </div>
-                  </button>
-                )
-              })}
-            </div>
-            
-            <div className="mt-8 p-5 rounded-[var(--r-lg)] bg-[var(--bg-accent)] border-2 border-[var(--blue-deep)] opacity-90 relative overflow-hidden">
-              <Splat.Specks color="var(--blue-deep)" size={80} seed={9} className="absolute bottom-1 right-2 opacity-15 pointer-events-none"/>
-              <div className="text-[11px] font-extrabold uppercase tracking-[.12em] text-[var(--blue-deep)]">Focus on Section #{activeStep + 1}</div>
-              <h4 className="drip-text text-[22px] text-[var(--ink)] mt-1">{subSteps[activeStep]?.title}</h4>
-              <p className="mt-2 text-[13px] text-[var(--ink)] font-medium leading-relaxed">
-                {SECTION_TIPS[activeStep] || "Hit the changes cleanly. Eyes off the fretboard once you trust the shape."}
-              </p>
-            </div>
-          </article>
+          )}
         </div>
 
-        <aside className="column">
-          <article className="tip-panel cool">
-            <h2 className="drip-text text-[var(--blue-deep)]">BBQ Pro Tip</h2>
-            <p className="text-[var(--ink)]">Advance only when the articulation stays clean. The groove matters more than the speed number.</p>
-          </article>
-
-          <article className="panel">
-            <div className="section-label">Practice Checklist</div>
-            <div className="checklist">
-              <div className="check-row"><div className="check-box bg-[var(--acid)] border-[var(--ink)] flex items-center justify-center text-xs font-bold text-[var(--ink)]">✓</div><span>Internalize tempo</span></div>
-              <div className="check-row"><div className="check-box border-[var(--line-strong)]"></div><span>Pocket and feel</span></div>
-              <div className="check-row"><div className="check-box border-[var(--line-strong)]"></div><span>Intentional ending</span></div>
-              <div className="check-row"><div className="check-box border-[var(--line-strong)]"></div><span>Melodic repetition</span></div>
+        {/* Sidebar */}
+        <div className="flex flex-col gap-5">
+          {/* Timer card */}
+          <div className="relative rounded-[var(--r-xl)] bg-[var(--ink)] text-[var(--cream-warm)] p-6 border-[3px] border-[var(--ink)] overflow-hidden shadow-[var(--shadow-pop)]">
+            <Splat.Burst color={skill} size={180} className="absolute -top-10 -right-8 opacity-20 pointer-events-none" rotate={45}/>
+            
+            <div className="relative z-10 text-[11px] font-extrabold uppercase tracking-[.12em]" style={{ color: skill }}>
+              {timerRunning ? "🔥 You're cooking" : "Ready when you are"}
             </div>
-          </article>
-
-          <article className="panel">
-            <div className="section-label">Progression Guardrail</div>
-            <p className="panel-copy">Advance only when completion and confidence trend in the right direction.</p>
-            <div className="mini-stat-grid mt-6">
-              <div className="mini-stat"><strong className="num-display">80</strong><span>clean BPM target</span></div>
-              <div className="mini-stat"><strong className="num-display">1</strong><span>current level gate</span></div>
+            
+            <div className="relative z-10 drip-text text-[78px] leading-[0.9] mt-2 text-[var(--cream-warm)]">
+              {mm}<span style={{ color: skill }}>:</span>{ss}
             </div>
-          </article>
-
-          <button className="button button-outline-strong mt-2">Session Complete</button>
-        </aside>
-      </section>
-
-      <section className="form-shell" id="log">
-        <div className="form-header">
-          <div>
-            <div className="section-label">Practice Log</div>
-            <h2 className="drip-text text-[var(--ink)] text-[32px]">Capture the session before you move on.</h2>
+            
+            <div className="relative z-10 flex gap-2 mt-4">
+              <button 
+                onClick={() => setTimerRunning(t => !t)}
+                className="flex-1 py-3 px-4 rounded-xl border-none font-black text-[15px] flex items-center justify-center gap-2 cursor-pointer transition-transform hover:-translate-y-0.5 active:translate-y-0"
+                style={{ background: skill, color: "var(--ink)", boxShadow: "4px 4px 0 var(--punch)" }}
+              >
+                {timerRunning ? <Pause className="w-4 h-4"/> : <Play className="w-4 h-4"/>}
+                {timerRunning ? "Pause" : "Start"}
+              </button>
+              <button 
+                className="py-3 px-4 rounded-xl bg-[var(--punch)] text-[var(--cream-warm)] border-none font-extrabold text-[13px] cursor-pointer transition-transform hover:-translate-y-0.5 active:translate-y-0"
+                style={{ boxShadow: `4px 4px 0 ${skill}` }}
+              >
+                Done ✓
+              </button>
+            </div>
           </div>
-          <div className="chip-row">
-            <span className="chip">Free preview</span>
-            <Link className="button button-secondary" href="/student/dashboard">Browse lessons</Link>
+
+          {/* Section details */}
+          <div className="relative p-5 rounded-[var(--r-lg)] bg-[var(--cream-warm)] border-2 border-[var(--cream-shadow)] overflow-hidden">
+            <Splat.Specks color={skill} size={80} seed={9} className="absolute bottom-1 right-2 opacity-30 pointer-events-none"/>
+            <div className="text-[11px] font-extrabold uppercase tracking-[.12em]" style={{ color: skill }}>Section #{activeStep + 1}</div>
+            <h4 className="drip-text text-[22px] text-[var(--ink)] mt-1">{subSteps[activeStep]?.title}</h4>
+            <p className="mt-2 text-[13px] text-[var(--ink-soft)] font-medium leading-relaxed">
+              {SECTION_TIPS[activeStep] || "Hit the changes cleanly. Eyes off the fretboard once you trust the shape."}
+            </p>
+          </div>
+          
+          {/* Hint */}
+          <div className="p-4 rounded-[var(--r-md)] bg-[var(--cream)] border-2 border-dashed border-[var(--ink-faint)]">
+            <div className="text-[11px] font-extrabold uppercase tracking-[.12em] text-[var(--ink-mid)]">Need a hint?</div>
+            <p className="mt-1.5 text-[13px] text-[var(--ink-mid)] font-medium leading-relaxed">
+              Use the slow-mo + loop buttons in AlphaTab to drill any sloppy section. Each completed section earns +30 XP toward the recipe's {exercise.xp || 150}.
+            </p>
           </div>
         </div>
-
-        <form>
-          <div className="form-grid">
-            <label className="field">
-              <span>Exercise</span>
-              <select defaultValue="12-Bar Blues">
-                <option>A major note map</option>
-                <option>Quarter-note grid</option>
-                <option>12-Bar Blues</option>
-              </select>
-            </label>
-            <label className="field">
-              <span>BPM reached cleanly</span>
-              <input type="number" defaultValue="80" />
-            </label>
-            <label className="field">
-              <span>Confidence</span>
-              <select defaultValue="4">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-              </select>
-            </label>
-            <label className="field">
-              <span>Minutes practiced</span>
-              <input type="number" defaultValue={Math.floor(seconds/60)} readOnly />
-            </label>
-          </div>
-
-          <label className="field mt-6">
-            <span>Notes</span>
-            <textarea defaultValue="Felt comfortable until the turnaround section. Need to drill bars 9-10 more slowly next time." />
-          </label>
-
-          <div className="flex gap-4 mt-8 items-center">
-            <button className="button button-primary" type="button">Save practice log</button>
-            <p className="form-status text-[13px]">Form state updates automatically based on timer.</p>
-          </div>
-        </form>
-      </section>
-
-    </main>
+      </div>
+    </div>
   )
 }

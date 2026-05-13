@@ -58,10 +58,10 @@ export default function BagOTricks() {
   const rhythmTricks = tricks.filter(t => t.category === 'Rhythm')
 
   return (
-    <>
+    <div className="min-h-screen bg-[var(--bg)] relative overflow-hidden pb-24">
       <SplatBackdrop intensity="medium" palette="warm" />
 
-      <main className="shell workspace relative z-10 pt-16">
+      <main className="relative z-10 max-w-5xl mx-auto px-6 md:px-14 pt-16">
         
         {/* Header */}
         <div className="text-center space-y-3 mb-16 relative">
@@ -180,6 +180,6 @@ export default function BagOTricks() {
 
         </div>
       </main>
-    </>
+    </div>
   )
 }
