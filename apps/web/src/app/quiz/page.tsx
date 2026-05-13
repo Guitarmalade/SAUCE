@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Guitar, Activity, Target, ArrowRight, Sparkles } from 'lucide-react'
+import { SplatBackdrop, Splat } from '@/components/ui/Splats'
 
 const ARCHETYPES = [
   "The Modern Improviser",
@@ -76,20 +77,16 @@ export default function AvatarQuiz() {
   const [selectedTricks, setSelectedTricks] = useState<string[]>([])
 
   const handleNext = () => {
-    // Apply presets when moving to respective steps
     if (step === 1 && archetype && ARCHETYPE_PRESETS[archetype]) {
       setIdealStats(ARCHETYPE_PRESETS[archetype])
     }
     if (step === 2 && genre && GENRE_TRICK_PRESETS[genre]) {
-      // Start them with up to 5 suggested tricks
       setSelectedTricks(GENRE_TRICK_PRESETS[genre].slice(0, 5))
     }
     setStep(prev => prev + 1)
   }
   
   const handleComplete = () => {
-    // In a real app, this would push to Supabase via Server Action
-    // For now, we store in localStorage to pass to results page
     if (typeof window !== 'undefined') {
       localStorage.setItem('avatar_data', JSON.stringify({ archetype, genre, currentStats, idealStats, selectedTricks }))
     }
@@ -97,22 +94,27 @@ export default function AvatarQuiz() {
   }
 
   return (
-    <div className="min-h-screen bg-offwhite flex items-center justify-center p-6 relative overflow-hidden">
+    <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center p-6 relative overflow-hidden">
       
-      {/* Decorative Splatter */}
-      <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-gradient-to-tr from-pink-500/20 to-purple-500/20 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-gradient-to-bl from-amber/20 to-orange-500/20 blur-[120px] pointer-events-none" />
+      <SplatBackdrop intensity="medium" palette="warm" />
 
-      <div className="w-full max-w-2xl relative z-10">
+      <div className="w-full max-w-2xl relative z-10 pt-10 pb-20">
         
         {/* Progress */}
-        <div className="mb-8 flex justify-center gap-2">
+        <div className="mb-10 flex justify-center gap-3">
           {[1, 2, 3, 4, 5].map(i => (
-            <div key={i} className={`h-2 rounded-full transition-all duration-500 ${step >= i ? 'w-12 bg-amber' : 'w-4 bg-navy/10'}`} />
+            <div key={i} className={`h-2.5 rounded-full transition-all duration-500 ${step >= i ? 'w-16 bg-[var(--marmalade)] shadow-[0_0_10px_var(--marmalade)]' : 'w-4 bg-[var(--ink-faint)]'}`} />
           ))}
         </div>
 
-        <div className="glass-card rounded-3xl p-8 md:p-12 shadow-2xl">
+        <div className="relative bg-[var(--cream-warm)] border-[3px] border-[var(--ink)] shadow-[var(--shadow-pop)] rounded-[var(--r-lg)] p-8 md:p-12">
+          
+          {step === 1 && <Splat.Specks color="var(--marmalade)" size={120} seed={1} className="absolute -top-6 -right-6 opacity-30 pointer-events-none" />}
+          {step === 2 && <Splat.Specks color="var(--cyan)" size={120} seed={2} className="absolute top-10 -left-6 opacity-30 pointer-events-none" />}
+          {step === 3 && <Splat.Specks color="var(--acid)" size={120} seed={3} className="absolute bottom-10 -right-6 opacity-30 pointer-events-none" />}
+          {step === 4 && <Splat.Specks color="var(--punch)" size={120} seed={4} className="absolute -top-10 -left-6 opacity-30 pointer-events-none" />}
+          {step === 5 && <Splat.Burst color="var(--marmalade)" size={180} seed={5} className="absolute -top-16 -right-10 opacity-20 pointer-events-none" rotate={45} />}
+
           <AnimatePresence mode="wait">
             
             {/* STEP 1: ARCHETYPE */}
@@ -122,12 +124,12 @@ export default function AvatarQuiz() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="space-y-8"
+                className="space-y-10 relative z-10"
               >
                 <div className="text-center space-y-4">
-                  <Guitar className="w-16 h-16 text-amber mx-auto" />
-                  <h1 className="text-4xl font-paint text-navy">Design Your Goal Guitar Avatar</h1>
-                  <p className="text-navy/70 text-lg font-medium">What kind of guitarist do you want to become?</p>
+                  <Guitar className="w-16 h-16 text-[var(--marmalade)] mx-auto drop-shadow-md" />
+                  <h1 className="drip-text text-[44px] text-[var(--ink)] leading-none">Design Your <span className="text-[var(--marmalade)]">Avatar</span></h1>
+                  <p className="text-[var(--ink-mid)] text-lg font-bold">What kind of guitarist do you want to become?</p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -135,10 +137,10 @@ export default function AvatarQuiz() {
                     <button
                       key={arch}
                       onClick={() => setArchetype(arch)}
-                      className={`p-4 rounded-2xl border-2 text-left font-bold transition-all duration-200 ${
+                      className={`p-4 rounded-2xl border-2 text-left font-extrabold transition-all duration-200 cursor-pointer ${
                         archetype === arch 
-                          ? 'border-amber bg-amber/10 text-amber shadow-lg scale-105' 
-                          : 'border-white/50 bg-white/30 text-navy hover:border-amber/50 hover:bg-white/50'
+                          ? 'border-[var(--marmalade)] bg-[var(--marmalade)] text-[var(--cream-warm)] shadow-[4px_4px_0_var(--ink)] -translate-y-1' 
+                          : 'border-[var(--cream-shadow)] bg-white text-[var(--ink)] hover:border-[var(--marmalade)] hover:-translate-y-0.5'
                       }`}
                     >
                       {arch}
@@ -149,9 +151,9 @@ export default function AvatarQuiz() {
                 <button 
                   disabled={!archetype}
                   onClick={handleNext}
-                  className="w-full btn-primary py-4 text-xl flex items-center justify-center gap-2 mt-8 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-5 rounded-2xl bg-[var(--punch)] text-[var(--cream-warm)] font-black text-xl flex items-center justify-center gap-3 mt-8 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none shadow-[4px_4px_0_var(--ink)] hover:-translate-y-1 transition-transform active:translate-y-0 cursor-pointer border-none"
                 >
-                  Next Step <ArrowRight className="w-6 h-6" />
+                  Next Step <ArrowRight className="w-6 h-6 stroke-[3]" />
                 </button>
               </motion.div>
             )}
@@ -163,12 +165,12 @@ export default function AvatarQuiz() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="space-y-8"
+                className="space-y-10 relative z-10"
               >
                 <div className="text-center space-y-4">
-                  <Guitar className="w-16 h-16 text-blue-500 mx-auto" />
-                  <h1 className="text-4xl font-paint text-navy">Set Your Style</h1>
-                  <p className="text-navy/70 text-lg font-medium">What is your primary genre of focus?</p>
+                  <Guitar className="w-16 h-16 text-[var(--cyan)] mx-auto drop-shadow-md" />
+                  <h1 className="drip-text text-[44px] text-[var(--ink)] leading-none">Set Your <span className="text-[var(--cyan)]">Style</span></h1>
+                  <p className="text-[var(--ink-mid)] text-lg font-bold">What is your primary genre of focus?</p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -176,10 +178,10 @@ export default function AvatarQuiz() {
                     <button
                       key={g}
                       onClick={() => setGenre(g)}
-                      className={`p-4 rounded-2xl border-2 text-left font-bold transition-all duration-200 ${
+                      className={`p-4 rounded-2xl border-2 text-left font-extrabold transition-all duration-200 cursor-pointer ${
                         genre === g 
-                          ? 'border-blue-500 bg-blue-500/10 text-blue-600 shadow-lg scale-105' 
-                          : 'border-white/50 bg-white/30 text-navy hover:border-blue-500/50 hover:bg-white/50'
+                          ? 'border-[var(--cyan)] bg-[var(--cyan)] text-[var(--ink)] shadow-[4px_4px_0_var(--ink)] -translate-y-1' 
+                          : 'border-[var(--cream-shadow)] bg-white text-[var(--ink)] hover:border-[var(--cyan)] hover:-translate-y-0.5'
                       }`}
                     >
                       {g}
@@ -190,9 +192,9 @@ export default function AvatarQuiz() {
                 <button 
                   disabled={!genre}
                   onClick={handleNext}
-                  className="w-full btn-primary py-4 text-xl flex items-center justify-center gap-2 mt-8 disabled:opacity-50 disabled:cursor-not-allowed bg-blue-500 hover:bg-blue-600 border-none"
+                  className="w-full py-5 rounded-2xl bg-[var(--cyan)] text-[var(--ink)] font-black text-xl flex items-center justify-center gap-3 mt-8 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none shadow-[4px_4px_0_var(--ink)] hover:-translate-y-1 transition-transform active:translate-y-0 cursor-pointer border-none"
                 >
-                  Next Step <ArrowRight className="w-6 h-6" />
+                  Next Step <ArrowRight className="w-6 h-6 stroke-[3]" />
                 </button>
               </motion.div>
             )}
@@ -200,30 +202,31 @@ export default function AvatarQuiz() {
             {/* STEP 3: CURRENT ABILITIES */}
             {step === 3 && (
               <motion.div
-                key="step2"
+                key="step3"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="space-y-8"
+                className="space-y-10 relative z-10"
               >
                 <div className="text-center space-y-4">
-                  <Activity className="w-16 h-16 text-blue-500 mx-auto" />
-                  <h1 className="text-4xl font-paint text-navy">Where are you now?</h1>
-                  <p className="text-navy/70 text-lg font-medium">Be honest. Rate your current abilities from 1-10.</p>
+                  <Activity className="w-16 h-16 text-[var(--acid)] mx-auto drop-shadow-md" />
+                  <h1 className="drip-text text-[44px] text-[var(--ink)] leading-none">Where are <span className="text-[var(--acid)]">You?</span></h1>
+                  <p className="text-[var(--ink-mid)] text-lg font-bold">Be honest. Rate your current abilities from 1-10.</p>
                 </div>
 
-                <div className="space-y-6">
+                <div className="space-y-8 bg-white p-6 rounded-2xl border-2 border-[var(--cream-shadow)]">
                   {ELEMENTS.map(el => (
-                    <div key={el.id} className="space-y-2">
-                      <div className="flex justify-between text-sm font-bold text-navy">
+                    <div key={el.id} className="space-y-3">
+                      <div className="flex justify-between text-sm font-black text-[var(--ink)] uppercase tracking-wide">
                         <span>{el.label}</span>
-                        <span className="text-blue-600">{currentStats[el.id]}</span>
+                        <span className="text-[var(--acid)] text-lg leading-none">{currentStats[el.id]}</span>
                       </div>
                       <input 
                         type="range" min="1" max="10" 
                         value={currentStats[el.id]}
                         onChange={(e) => setCurrentStats({...currentStats, [el.id]: parseInt(e.target.value)})}
-                        className="w-full accent-blue-500 h-2 bg-navy/10 rounded-lg appearance-none cursor-pointer"
+                        className="w-full h-3 bg-[var(--cream-shadow)] rounded-lg appearance-none cursor-pointer"
+                        style={{ accentColor: "var(--acid)" }}
                       />
                     </div>
                   ))}
@@ -231,9 +234,9 @@ export default function AvatarQuiz() {
 
                 <button 
                   onClick={handleNext}
-                  className="w-full btn-primary py-4 text-xl flex items-center justify-center gap-2 mt-8 bg-blue-500 hover:bg-blue-600"
+                  className="w-full py-5 rounded-2xl bg-[var(--acid)] text-[var(--ink)] font-black text-xl flex items-center justify-center gap-3 mt-8 shadow-[4px_4px_0_var(--ink)] hover:-translate-y-1 transition-transform active:translate-y-0 cursor-pointer border-none"
                 >
-                  Next Step <ArrowRight className="w-6 h-6" />
+                  Next Step <ArrowRight className="w-6 h-6 stroke-[3]" />
                 </button>
               </motion.div>
             )}
@@ -241,30 +244,31 @@ export default function AvatarQuiz() {
             {/* STEP 4: IDEAL ABILITIES */}
             {step === 4 && (
               <motion.div
-                key="step3"
+                key="step4"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="space-y-8"
+                className="space-y-10 relative z-10"
               >
                 <div className="text-center space-y-4">
-                  <Target className="w-16 h-16 text-pink-500 mx-auto" />
-                  <h1 className="text-4xl font-paint text-navy">Design Your Ideal Self</h1>
-                  <p className="text-navy/70 text-lg font-medium">To be <strong>{archetype}</strong>, what do these stats need to be?</p>
+                  <Target className="w-16 h-16 text-[var(--punch)] mx-auto drop-shadow-md" />
+                  <h1 className="drip-text text-[44px] text-[var(--ink)] leading-none">Your <span className="text-[var(--punch)]">Ideal Self</span></h1>
+                  <p className="text-[var(--ink-mid)] text-lg font-bold">To be <strong>{archetype}</strong>, what do these stats need to be?</p>
                 </div>
 
-                <div className="space-y-6">
+                <div className="space-y-8 bg-white p-6 rounded-2xl border-2 border-[var(--cream-shadow)]">
                   {ELEMENTS.map(el => (
-                    <div key={el.id} className="space-y-2">
-                      <div className="flex justify-between text-sm font-bold text-navy">
+                    <div key={el.id} className="space-y-3">
+                      <div className="flex justify-between text-sm font-black text-[var(--ink)] uppercase tracking-wide">
                         <span>{el.label}</span>
-                        <span className="text-pink-600">{idealStats[el.id]}</span>
+                        <span className="text-[var(--punch)] text-lg leading-none">{idealStats[el.id]}</span>
                       </div>
                       <input 
                         type="range" min="1" max="10" 
                         value={idealStats[el.id]}
                         onChange={(e) => setIdealStats({...idealStats, [el.id]: parseInt(e.target.value)})}
-                        className="w-full accent-pink-500 h-2 bg-navy/10 rounded-lg appearance-none cursor-pointer"
+                        className="w-full h-3 bg-[var(--cream-shadow)] rounded-lg appearance-none cursor-pointer"
+                        style={{ accentColor: "var(--punch)" }}
                       />
                     </div>
                   ))}
@@ -272,9 +276,9 @@ export default function AvatarQuiz() {
 
                 <button 
                   onClick={handleNext}
-                  className="w-full btn-primary py-4 text-xl flex items-center justify-center gap-2 mt-8 bg-pink-500 hover:bg-pink-600 border-none shadow-pink-500/30"
+                  className="w-full py-5 rounded-2xl bg-[var(--punch)] text-[var(--cream-warm)] font-black text-xl flex items-center justify-center gap-3 mt-8 shadow-[4px_4px_0_var(--ink)] hover:-translate-y-1 transition-transform active:translate-y-0 cursor-pointer border-none"
                 >
-                  Next Step <ArrowRight className="w-6 h-6" />
+                  Next Step <ArrowRight className="w-6 h-6 stroke-[3]" />
                 </button>
               </motion.div>
             )}
@@ -282,19 +286,19 @@ export default function AvatarQuiz() {
             {/* STEP 5: BAG O' TRICKS */}
             {step === 5 && (
               <motion.div
-                key="step4"
+                key="step5"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="space-y-8"
+                className="space-y-10 relative z-10"
               >
                 <div className="text-center space-y-4">
-                  <Sparkles className="w-16 h-16 text-amber mx-auto" />
-                  <h1 className="text-4xl font-paint text-navy">Fill Your Bag</h1>
-                  <p className="text-navy/70 text-lg font-medium">What lead guitar licks and tricks do you want to learn? (Choose exactly 5)</p>
+                  <Sparkles className="w-16 h-16 text-[var(--marmalade)] mx-auto drop-shadow-md" />
+                  <h1 className="drip-text text-[44px] text-[var(--ink)] leading-none">Fill Your <span className="text-[var(--marmalade)]">Bag</span></h1>
+                  <p className="text-[var(--ink-mid)] text-lg font-bold">What lead guitar licks and tricks do you want to learn? (Choose exactly 5)</p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[300px] overflow-y-auto p-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[340px] overflow-y-auto p-3 bg-white rounded-2xl border-2 border-[var(--cream-shadow)]">
                   {TRICKS.map(trick => {
                     const isSelected = selectedTricks.includes(trick)
                     const isMaxed = selectedTricks.length >= 5 && !isSelected
@@ -306,12 +310,12 @@ export default function AvatarQuiz() {
                           if (isSelected) setSelectedTricks(prev => prev.filter(t => t !== trick))
                           else setSelectedTricks(prev => [...prev, trick])
                         }}
-                        className={`p-3 rounded-xl border-2 text-left font-bold transition-all text-sm ${
+                        className={`p-4 rounded-xl border-2 text-left font-extrabold transition-all text-sm cursor-pointer ${
                           isSelected 
-                            ? 'border-amber bg-amber/10 text-amber shadow-md' 
+                            ? 'border-[var(--marmalade)] bg-[var(--marmalade)] text-[var(--cream-warm)] shadow-[2px_2px_0_var(--ink)] -translate-y-0.5' 
                             : isMaxed 
-                              ? 'border-navy/5 bg-navy/5 text-navy/30 cursor-not-allowed'
-                              : 'border-white/50 bg-white/30 text-navy hover:border-amber/50 hover:bg-white/50'
+                              ? 'border-[var(--ink-faint)] bg-gray-50 text-[var(--ink-faint)] cursor-not-allowed opacity-50'
+                              : 'border-[var(--cream-shadow)] bg-white text-[var(--ink)] hover:border-[var(--marmalade)] hover:-translate-y-0.5'
                         }`}
                       >
                         {trick}
@@ -320,16 +324,16 @@ export default function AvatarQuiz() {
                   })}
                 </div>
 
-                <div className="text-center text-sm font-bold text-navy/50">
-                  {selectedTricks.length} / 5 Selected
+                <div className="text-center text-sm font-black uppercase tracking-widest text-[var(--ink-mid)]">
+                  <span className={selectedTricks.length === 5 ? "text-[var(--marmalade)]" : ""}>{selectedTricks.length}</span> / 5 Selected
                 </div>
 
                 <button 
                   disabled={selectedTricks.length !== 5}
                   onClick={handleComplete}
-                  className="w-full btn-primary py-4 text-xl flex items-center justify-center gap-2 mt-8 bg-gradient-to-r from-amber to-orange-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-5 rounded-2xl bg-[var(--ink)] text-[var(--cream-warm)] font-black text-xl flex items-center justify-center gap-3 mt-8 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none shadow-[4px_4px_0_var(--marmalade)] hover:-translate-y-1 transition-transform active:translate-y-0 cursor-pointer border-none"
                 >
-                  Generate My DNA <ArrowRight className="w-6 h-6" />
+                  Generate My DNA <ArrowRight className="w-6 h-6 stroke-[3]" />
                 </button>
               </motion.div>
             )}

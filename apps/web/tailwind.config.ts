@@ -43,6 +43,31 @@ const config: Config = {
           DEFAULT: '#faf8f5',
           dark: '#e6e0d4',
         },
+        marmalade: {
+          DEFAULT: '#F5A623',
+          deep: '#e09115',
+        },
+        punch: {
+          DEFAULT: '#E63678',
+        },
+        cream: {
+          DEFAULT: '#FCF6E8',
+          warm: '#Fdfaf0',
+          shadow: '#efe6d5',
+        },
+        ink: {
+          DEFAULT: '#14182E',
+          mid: '#6A7196',
+        },
+        cyan: {
+          DEFAULT: '#2BC9E6',
+        },
+        acid: {
+          DEFAULT: '#B6E94B',
+        },
+        grape: {
+          DEFAULT: '#8B5BD6',
+        },
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

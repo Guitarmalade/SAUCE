@@ -28,12 +28,12 @@ export function OnboardingForm() {
   const [status, setStatus] = useState("Save your student starting point to the API.");
 
   function toggleArea(area: DomainArea) {
-    setForm((current) => {
+    setForm((current: OnboardingInput) => {
       const exists = current.focusAreas.includes(area);
       return {
         ...current,
         focusAreas: exists
-          ? current.focusAreas.filter((item) => item !== area)
+          ? current.focusAreas.filter((item: DomainArea) => item !== area)
           : [...current.focusAreas, area]
       };
     });

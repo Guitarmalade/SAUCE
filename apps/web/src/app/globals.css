@@ -3,6 +3,24 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --marmalade: #F5A623;
+    --marmalade-deep: #e09115;
+    --punch: #E63678;
+    --cream: #FCF6E8;
+    --cream-warm: #Fdfaf0;
+    --cream-shadow: #efe6d5;
+    --ink: #14182E;
+    --ink-mid: #6A7196;
+    --cyan: #2BC9E6;
+    --acid: #B6E94B;
+    --grape: #8B5BD6;
+    --r-xl: 28px;
+    --r-lg: 22px;
+    --r-md: 18px;
+    --shadow-pop: 0 24px 60px rgba(32, 51, 89, 0.08);
+  }
+
   body {
     @apply bg-offwhite text-navy font-sans antialiased overflow-x-hidden;
   }
@@ -47,4 +65,20 @@
 
 .text-gradient {
   @apply bg-clip-text text-transparent bg-gradient-to-r from-navy via-navy-600 to-amber-600;
+}
+
+.drip-text {
+  font-family: var(--font-paint), cursive;
+}
+
+.num-display {
+  font-family: var(--font-paint), cursive;
+}
+
+.label-eyebrow {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .22em;
+  font-weight: 800;
+  color: var(--ink-mid);
 }

@@ -12,8 +12,8 @@ export default function AlphaTabPlayer({ fileUrl }: { fileUrl: string }) {
     import('@coderline/alphatab').then((alphaTab) => {
       if (containerRef.current) {
         api = new alphaTab.AlphaTabApi(containerRef.current, {
-          file: fileUrl,
           core: {
+            file: fileUrl,
             fontDirectory: 'https://cdn.jsdelivr.net/npm/@coderline/alphatab@latest/dist/font/'
           },
           player: {

@@ -8,3 +8,4 @@ coverage
 dist
 node_modules
 *.log
+scripts/social-agent/.browser-profile/

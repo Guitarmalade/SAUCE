@@ -4,11 +4,11 @@ import type { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const links: ReadonlyArray<{ href: Route; label: string }> = [
-  { href: "/dashboard", label: "Dashboard" },
-  { href: "/practice", label: "My Shed" },
-  { href: "/curriculum", label: "Curriculum" },
-  { href: "/onboarding", label: "Goals" },
+const links: ReadonlyArray<{ href: any; label: string }> = [
+  { href: "/student/dashboard", label: "Dashboard" },
+  { href: "/student/practice/123", label: "My Shed" },
+  { href: "/student/core", label: "Curriculum" },
+  { href: "/quiz", label: "Goals" },
 ];
 
 export function SiteNav() {

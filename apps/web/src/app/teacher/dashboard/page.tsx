@@ -71,7 +71,7 @@ export default async function TeacherDashboard() {
                 </Link>
               </li>
               <li>
-                <Link href="/teacher/curriculum" className="block w-full text-left px-4 py-2 bg-navy/5 text-navy font-medium rounded-md hover:bg-navy/10 transition-colors">
+                <Link href={"/teacher/curriculum" as any} className="block w-full text-left px-4 py-2 bg-navy/5 text-navy font-medium rounded-md hover:bg-navy/10 transition-colors">
                   Edit Curriculum
                 </Link>
               </li>
