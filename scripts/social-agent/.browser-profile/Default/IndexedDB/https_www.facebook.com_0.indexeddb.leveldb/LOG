@@ -1,0 +1,7 @@
+2026/05/06-22:21:46.127 370e74 Reusing MANIFEST /Users/chrisschreiner/sauce/scripts/social-agent/.browser-profile/Default/IndexedDB/https_www.facebook.com_0.indexeddb.leveldb/MANIFEST-000001
+2026/05/06-22:21:46.127 370e74 Recovering log #3
+2026/05/06-22:21:46.130 370e74 Reusing old log /Users/chrisschreiner/sauce/scripts/social-agent/.browser-profile/Default/IndexedDB/https_www.facebook.com_0.indexeddb.leveldb/000003.log 
+2026/05/07-07:14:01.921 370e76 Level-0 table #5: started
+2026/05/07-07:14:01.932 370e76 Level-0 table #5: 340920 bytes OK
+2026/05/07-07:14:01.933 370e76 Delete type=0 #3
+2026/05/07-07:14:01.936 370e76 Manual compaction at level-0 from (begin) .. (end); will stop at (end)

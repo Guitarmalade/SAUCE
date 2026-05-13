@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Guitarmalade Scheduler</title>
+<style>
+  body { font-family: -apple-system, system-ui, sans-serif; background: #121212; color: #fff; padding: 40px; }
+  .post-card { background: #1e1e1e; padding: 20px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 20px; }
+  .img-preview { width: 200px; height: auto; border-radius: 4px; }
+  .content { flex-grow: 1; }
+  button { background: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+  button:hover { background: #0056b3; }
+  textarea { width: 100%; height: 150px; background: #2d2d2d; color: white; border: 1px solid #444; padding: 10px; margin-bottom: 10px; border-radius: 4px; }
+  h1 { color: #007bff; }
+</style>
+</head>
+<body>
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <h1>🎸 Guitarmalade Rapid Scheduler</h1>
+    <a href="https://business.facebook.com/latest/composer" target="_blank">
+      <button style="background: #28a745; font-size: 16px; padding: 15px 30px;">1. Open Meta Business Suite Composer</button>
+    </a>
+  </div>
+  <p><em>macOS security blocked the automated background file-upload for this run. To get these scheduled immediately, click the big green button above to open Meta, then use the "Copy Text" buttons below to drop them in!</em></p>
+
+  <div id="posts"></div>
+
+  <script>
+    const posts = [
+      {
+        time: "May 8, 2026 @ 8:00 AM EST",
+        img: "content/Blues Chord Chasing Cheat Sheel copy.jpg",
+        text: "Stop blindly noodling the minor pentatonic scale. 🛑 If you want to sound like a pro, you have to CHASE the chords! 🎸 Use these 3 patterns to outline the A7, D7, and E7 in a standard blues progression. By shifting your pentatonic pattern to match the underlying chord, you instantly add that sweet, melodic flavor to your solos. 🍯 Save this cheat sheet, grab your guitar, and try it over a backing track today! ✅ \n\nWant the full high-res PDF and more fretboard secrets? Comment SAUCE below and I'll send it directly to your inbox!"
+      },
+      {
+        time: "May 8, 2026 @ 12:05 PM EST",
+        img: "content/A blues turnarounds update copy.jpg",
+        text: "The turnaround is the most crucial 2 bars of the entire 12-bar blues. It’s what resets the groove and begs the band to take it from the top! 🔥 If your turnarounds are feeling stale, use these classic moves to spice up that V-IV-I transition. Master these shapes, and you’ll always know exactly where you are on the fretboard when the progression resolves. 🎸 Keep it playful, keep it in the pocket, and let it rip! ✅\n\nNeed more blues tricks? Comment BBQ and I’ll DM you the goods."
+      },
+      {
+        time: "May 8, 2026 @ 12:50 PM EST",
+        img: "content/a blues improv 1 copy.jpg",
+        text: "Improvisation isn't just about playing random notes fast—it's about building a vocabulary. 🎸 Start with these foundational blues licks. Practice them slowly, internalize the rhythm, and then start bending them to fit your own style. Remember, the masters didn't invent every lick; they stole them, assimilated them, and utilized them to create their own voice (that's the S.A.U.C.E. method in action!). 🍯 Keep practicing, you've got this! ✅\n\nWant the full breakdown? COMMENT LICKS to get the step-by-step guide!"
+      },
+      {
+        time: "May 8, 2026 @ 8:00 PM EST",
+        img: "content/abac vs aaab copy.jpg",
+        text: "Structure is the secret to a memorable solo! 🧠 Let's talk about phrasing: ABAC vs. AAAB. If you just play endless licks, you lose the listener. But if you state a theme (A), repeat it (A), introduce a variation (B), and bring it back home... suddenly you're telling a story. 🔥 Great guitar playing is just as much about structure as it is about technique. Try forcing yourself into one of these phrasing structures today and watch your phrasing transform! 🎸✅\n\nWant to dive deeper into fretboard theory? Comment SAUCE for the full lesson!"
+      }
+    ];
+
+    const container = document.getElementById('posts');
+    posts.forEach((p, i) => {
+      container.innerHTML += `
+        <div class="post-card">
+          <img src="${p.img}" class="img-preview" alt="Post Image">
+          <div class="content">
+            <h3>Post ${i+1} — ${p.time}</h3>
+            <textarea id="text-${i}" readonly>${p.text}</textarea><br>
+            <button onclick="navigator.clipboard.writeText(document.getElementById('text-${i}').value); this.innerText='Copied!'; setTimeout(() => this.innerText='Copy Text', 2000);">Copy Text</button>
+          </div>
+        </div>
+      `;
+    });
+  </script>
+</body>
+</html>

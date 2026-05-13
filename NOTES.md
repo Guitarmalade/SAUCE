@@ -115,3 +115,84 @@ Listed easiest to hardest:
 ### Important rule
 
 Don't grab random repos that look cool unless someone trusted (or an AI agent) confirms they're worth using. Lots of half-finished or abandoned code on GitHub. The names listed above are widely used and well-maintained — safe defaults.
+
+## Session — May 6, 2026 — social schedule draft
+
+### What got done
+
+- Added `docs/marketing/2026-05-06-meta-schedule.md` with four Facebook/Instagram post slots for `8:00 AM`, `12:05 PM`, `12:50 PM`, and `8:00 PM` EDT.
+- Added `docs/marketing/2026-05-06-x-schedule.md` with the matching four X post slots for `8:00 AM`, `12:05 PM`, `12:50 PM`, and `8:00 PM` EDT.
+- Wrote a caption for `Triad Inversions Along and Across`.
+- Wrote a caption for `A Minor Tapping Fun`.
+- Wrote a caption for `Alternate Tuning CHEAT SHEET`.
+- Wrote a caption for `I V vi IV 5 Ways`.
+- Updated both schedule docs so the missed `8:00 AM` slot is now marked `Publish immediately` for Wednesday, May 6, 2026.
+
+### Platform status
+
+- X is complete for Wednesday, May 6, 2026:
+  - `Triad Inversions Along and Across` posted live immediately.
+  - `A Minor Tapping Fun` scheduled for `12:05 PM` EDT.
+  - `Alternate Tuning CHEAT SHEET` scheduled for `12:50 PM` EDT.
+  - `I V vi IV 5 Ways` scheduled for `8:00 PM` EDT.
+- Meta Business Suite is complete for Wednesday, May 6, 2026:
+  - `Triad Inversions Along and Across` published live immediately.
+  - `A Minor Tapping Fun` scheduled for `12:05 PM` EDT.
+  - `Alternate Tuning CHEAT SHEET` corrected from `11:50 PM` to `12:50 PM` EDT for both Facebook and Instagram.
+  - `I V vi IV 5 Ways` scheduled for `8:00 PM` EDT.
+
+## Session — May 6, 2026 — Merchant Center approval audit
+
+### What got done
+
+- Audited the live `guitarmalade.com` product pages that Merchant Center would crawl.
+- Confirmed the public lesson and merch product pages on `guitarmalade.com` are mostly thin Webflow shells around Gumroad embeds.
+- Confirmed `Guitarmalde Cookbook Vol. 1` is a Gumroad `ebook` / PDF digital download.
+- Confirmed `Blues Dad BBQ` and `Guitarmalade Top 5 LICKS` are Gumroad `digital` products.
+- Confirmed `Guitarmalade Sticker` is a Gumroad `physical` product.
+- Wrote a detailed action note at `docs/marketing/2026-05-06-merchant-center-approval-audit.md`.
+
+### What still needs to happen
+
+- In Merchant Center, open the cookbook item and verify the exact disapproval reason text.
+- If the issue says digital books / eBooks are not allowed in Shopping ads, remove the cookbook from Shopping ads instead of trying to force approval.
+- Rebuild the Webflow product template so product detail pages contain real HTML product content instead of mostly just a Gumroad embed.
+- Add policy pages: privacy, terms, refund policy, and shipping policy.
+- Strengthen the site-wide business identity with clearer contact / business info.
+
+## Session — May 8, 2026 — social posting
+
+### What got done
+
+- Scheduled four Meta Business Suite posts for Friday, May 8, 2026 at `12:05 PM`, `12:50 PM`, `5:30 PM`, and `8:00 PM` EDT.
+- Published `Numbers In Music Cheat Sheet` immediately on Meta Business Suite.
+- Published `Numbers In Music Cheat Sheet` immediately on X.
+- Added a plain-language run log at `docs/marketing/2026-05-08-social-posts.md`.
+- Added repo-local browser automation helpers:
+  - `scripts/devtools/meta-schedule-guitarmalade-may08.mjs`
+  - `scripts/devtools/x-schedule-guitarmalade-may08.mjs`
+  - `scripts/devtools/meta-post-numbers-now.mjs`
+  - `scripts/devtools/x-post-numbers-now.mjs`
+
+### What still needs to happen
+
+- If the four scheduled lesson graphics also need to be queued on X for Friday, May 8, 2026, that queue still needs to be completed. The earlier X scheduling run was intentionally stopped when the task changed to posting `Numbers In Music Cheat Sheet` right away.
+
+## Session — May 9, 2026 — social posting
+
+### What got done
+
+- Published `Intervals Cheat Sheet` live at `8:00 AM` EDT on Meta Business Suite and X.
+- Scheduled `Ionian + Major Pentatonic Cheat Sheet` for `12:05 PM` EDT on Meta Business Suite, Facebook, Instagram, and X.
+- Scheduled `Kata-Kumoi Pentatonic` for `12:50 PM` EDT on Meta Business Suite, Facebook, Instagram, and X.
+- Scheduled `Linear Progressions` plus `Line Cliche` as a two-image post for `8:00 PM` EDT on Meta Business Suite, Facebook, Instagram, and X.
+- Added the plain-language run log at `docs/marketing/2026-05-09-social-posts.md`.
+- Added repo-local browser automation helpers:
+  - `scripts/devtools/meta-schedule-guitarmalade-may09.mjs`
+  - `scripts/devtools/x-schedule-guitarmalade-may09.mjs`
+  - `scripts/devtools/meta-post-intervals-8am-may09.mjs`
+  - `scripts/devtools/x-post-intervals-8am-may09.mjs`
+
+### What still needs to happen
+
+- If you want stronger proof for the later X scheduled posts, do one more manual spot-check in X because the open drafts tab stayed stale during the browser check even though the one-off scheduler returned the expected scheduled summaries.

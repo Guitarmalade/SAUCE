@@ -1,0 +1,6 @@
+2026/05/12-22:39:32.161 81c1ee Reusing MANIFEST /Users/chrisschreiner/sauce/scripts/social-agent/.browser-profile/Default/Local Storage/leveldb/MANIFEST-000001
+2026/05/12-22:39:32.163 81c1ee Recovering log #4
+2026/05/12-22:39:32.163 81c1ee Reusing old log /Users/chrisschreiner/sauce/scripts/social-agent/.browser-profile/Default/Local Storage/leveldb/000004.log 
+2026/05/12-22:40:01.974 81c1ee Level-0 table #8: started
+2026/05/12-22:40:01.975 81c1ee Level-0 table #8: 17944 bytes OK
+2026/05/12-22:40:01.977 81c1ee Delete type=0 #4

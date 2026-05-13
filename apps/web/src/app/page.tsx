@@ -1,137 +1,69 @@
-import Link from "next/link";
-import { LEVEL_ONE_EXERCISES } from "@sauce/curriculum";
-
-const checklist = [
-  "Internalize tempo",
-  "Pocket and feel",
-  "Intentional ending",
-  "Melodic repetition",
-];
-
-const improvGoals = [
-  {
-    name: "Cycling Licks",
-    detail: "Repetitive, high-energy patterns.",
-  },
-  {
-    name: "Turnaround Licks",
-    detail: "Nailing the landing of the form.",
-  },
-  {
-    name: "Unison Bends",
-    detail: "Classic blues screaming sustain.",
-  },
-];
+import Link from 'next/link'
+import { Music, Calendar, Target, Sparkles } from 'lucide-react'
 
 export default function HomePage() {
-  const feature = LEVEL_ONE_EXERCISES[1] ?? LEVEL_ONE_EXERCISES[0];
-
   return (
-    <main className="claude-page">
-      <div className="shell claude-shell">
-        <section className="claude-hero-bar">
-          <div className="claude-page-heading">
-            <div className="claude-back-pill" aria-hidden="true">
-              ←
+    <main className="min-h-screen flex flex-col items-center justify-center p-8 relative">
+      
+      <div className="absolute top-8 left-8 text-2xl font-paint text-navy opacity-50 select-none hidden md:block rotate-12">
+        S.A.U.C.E.
+      </div>
+      <div className="absolute bottom-12 right-12 text-4xl font-paint text-amber opacity-30 select-none hidden md:block -rotate-6">
+        C.O.R.E.
+      </div>
+
+      <div className="max-w-4xl w-full text-center space-y-8 z-10">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-4 animate-float">
+          <Sparkles className="w-5 h-5 text-amber" />
+          <span className="text-sm font-bold text-navy/80 tracking-wide uppercase">The Method Made Digital</span>
+        </div>
+
+        <h1 className="text-7xl md:text-8xl font-paint text-navy tracking-tight drop-shadow-sm pb-2">
+          Guitarmalade
+        </h1>
+        <h2 className="text-3xl md:text-5xl font-extrabold text-gradient pb-4">
+          Unleash Your S.A.U.C.E.
+        </h2>
+        
+        <p className="text-xl text-navy/80 max-w-2xl mx-auto font-medium leading-relaxed">
+          The ultimate student practice and progress tracking tool. Master the C.O.R.E. curriculum, build your streak, and turn practice into music.
+        </p>
+        
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-12">
+          <Link href="/signup" className="w-full sm:w-auto btn-primary text-lg">
+            Start the Journey
+          </Link>
+          <Link href="/login" className="w-full sm:w-auto btn-secondary text-lg">
+            Access the Kitchen
+          </Link>
+        </div>
+
+        <div className="pt-24 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+          <div className="glass-card p-8 rounded-2xl relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+              <Calendar className="w-24 h-24 text-navy" />
             </div>
-            <div>
-              <h1 className="claude-main-title">Now Sizzling...</h1>
-              <p className="claude-subtitle">Focus on pocket and resolution.</p>
+            <h3 className="text-2xl font-paint text-navy mb-3">Log It</h3>
+            <p className="text-navy/70 font-medium relative z-10">Track your daily kitchen time, log your focus, and build an unbreakable streak. The numbers don't lie.</p>
+          </div>
+          
+          <div className="glass-card p-8 rounded-2xl relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+              <Music className="w-24 h-24 text-amber" />
             </div>
+            <h3 className="text-2xl font-paint text-navy mb-3">Map It</h3>
+            <p className="text-navy/70 font-medium relative z-10">Follow the C.O.R.E. curriculum map. Unlock milestones and master new skills step-by-step.</p>
           </div>
 
-          <div className="claude-timer-pod">
-            <div className="claude-timer-icon">◔</div>
-            <div className="claude-timer-value">0:00</div>
-            <Link className="claude-primary-button" href="/practice">
-              Start
-            </Link>
+          <div className="glass-card p-8 rounded-2xl relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+              <Target className="w-24 h-24 text-navy" />
+            </div>
+            <h3 className="text-2xl font-paint text-navy mb-3">Nail It</h3>
+            <p className="text-navy/70 font-medium relative z-10">Receive assignments, internalize the feel, and get direct feedback from your instructor.</p>
           </div>
-        </section>
-
-        <section className="claude-content-grid">
-          <div className="claude-main-column">
-            <article className="claude-panel claude-panel-featured">
-              <div className="claude-panel-heading">
-                <span className="claude-panel-icon">♫</span>
-                <h2>Rhythm Anchor: Blues 1.5 w/ Turnaround</h2>
-              </div>
-              <div className="claude-media-card">
-                <div className="claude-media-play">▶</div>
-                <p>Click to view sheet music:</p>
-                <strong>{feature?.title ?? "12 bar blues shuffle 2"}</strong>
-                <em>
-                  Maintain a consistent triplet feel and don&apos;t rush the
-                  turnaround.
-                </em>
-              </div>
-            </article>
-
-            <article className="claude-panel">
-              <div className="claude-panel-heading">
-                <span className="claude-panel-icon">◎</span>
-                <h2>Improvisation Goals</h2>
-              </div>
-              <div className="claude-goal-list">
-                {improvGoals.map((goal, index) => (
-                  <div className="claude-goal-row" key={goal.name}>
-                    <div className="claude-goal-index">{index + 1}</div>
-                    <div className="claude-goal-copy">
-                      <strong>{goal.name}</strong>
-                      <span>{goal.detail}</span>
-                      <Link className="claude-inline-link" href="/curriculum">
-                        View reference file
-                      </Link>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </article>
-          </div>
-
-          <aside className="claude-side-column">
-            <article className="claude-tip-panel">
-              <h2>BBQ Pro Tip</h2>
-              <p>
-                A dominant chord can be reduced to the color tones. Isolate the
-                third, fifth, and flat seventh, then use that sound to push
-                outside and resolve cleanly.
-              </p>
-            </article>
-
-            <article className="claude-panel">
-              <div className="claude-small-heading">Practice Checklist</div>
-              <div className="claude-checklist">
-                {checklist.map((item) => (
-                  <div className="claude-check-row" key={item}>
-                    <span className="claude-check-box" aria-hidden="true" />
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
-            </article>
-
-            <article className="claude-panel">
-              <div className="claude-small-heading">Open the app</div>
-              <div className="claude-route-stack">
-                <Link className="claude-route-link" href="/dashboard">
-                  Open dashboard
-                </Link>
-                <Link className="claude-route-link" href="/practice">
-                  Open my shed
-                </Link>
-                <Link className="claude-route-link" href="/onboarding">
-                  Start onboarding
-                </Link>
-              </div>
-            </article>
-
-            <Link className="claude-complete-button" href="/dashboard">
-              Session Complete
-            </Link>
-          </aside>
-        </section>
+        </div>
       </div>
     </main>
-  );
+  )
 }
