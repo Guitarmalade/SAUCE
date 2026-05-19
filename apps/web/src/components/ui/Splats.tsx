@@ -88,6 +88,14 @@ export const Splat = {
     <svg width={size} height={size} viewBox="0 0 28 28" style={style} className={className}>
       <path fill={color} d="M14 2 C 20 2, 26 7, 25 14 C 26 20, 20 26, 14 25 C 8 26, 2 20, 3 14 C 2 7, 8 2, 14 2 Z"/>
     </svg>
+  ),
+
+  Underline: ({ color = "#F5A623", width = 240, style = {}, rotate = 0, height = 22 }: SplatProps & { width?: number, height?: number }) => (
+    <svg width={width} height={height} viewBox="0 0 240 22" style={{ ...style, transform: `rotate(${rotate}deg)` }}>
+      <path fill={color} d="M5 14 C 50 6, 100 4, 150 8 C 190 11, 220 9, 235 12 C 232 17, 200 19, 160 17 C 110 14, 60 19, 20 18 C 8 17, 3 16, 5 14 Z"/>
+      <path fill={color} d="M40 18 Q 38 22 42 22 Q 44 21 40 18 Z"/>
+      <path fill={color} d="M120 19 Q 118 22 122 22 Q 124 21 120 19 Z"/>
+    </svg>
   )
 }
 
