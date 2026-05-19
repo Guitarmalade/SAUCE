@@ -2,11 +2,12 @@ import { signup } from '@/app/auth/actions'
 import Link from 'next/link'
 import { Sparkles } from 'lucide-react'
 
-export default function SignupPage({
-  searchParams,
-}: {
-  searchParams: { message: string }
-}) {
+export default async function SignupPage(
+  props: {
+    searchParams: Promise<{ message?: string }>
+  }
+) {
+  const searchParams = await props.searchParams
   return (
     <div className="min-h-screen flex items-center justify-center p-4 py-12 relative">
       <div className="max-w-md w-full glass-card p-10 rounded-3xl relative z-10">
