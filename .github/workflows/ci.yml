@@ -16,6 +16,7 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile=false
+      - run: pnpm --filter @sauce/database exec prisma generate
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm test
