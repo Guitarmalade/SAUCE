@@ -196,3 +196,79 @@ Don't grab random repos that look cool unless someone trusted (or an AI agent) c
 ### What still needs to happen
 
 - If you want stronger proof for the later X scheduled posts, do one more manual spot-check in X because the open drafts tab stayed stale during the browser check even though the one-off scheduler returned the expected scheduled summaries.
+
+## Session — May 18, 2026 — Meta lesson move
+
+### What got done
+
+- Moved the guitar lesson batch onto Monday, May 18, 2026 in Meta Business Suite month view.
+- Confirmed today's planner shows the lesson slots at `11:30 AM`, `12:05 PM`, `12:50 PM`, and `8:00 PM`, each duplicated for the shared Facebook and Instagram post entries.
+- Added the run log at `docs/marketing/2026-05-18-meta-lesson-move.md`.
+- Added the one-off scheduler at `scripts/devtools/meta-schedule-guitarmalade-may18-lessons-today.mjs`.
+
+### What still needs to happen
+
+- Decide whether the separate meme slot at `8:09 PM` on May 18, 2026 should stay or be removed.
+
+### Follow-up
+
+- Removed the duplicate Wednesday, May 20, 2026 lesson posts from Meta Business Suite. A fresh Wednesday planner tab verified `0` remaining lesson tiles in that column.
+- Added the cleanup helper at `scripts/devtools/meta-delete-guitarmalade-may20-lesson-duplicates.mjs`.
+
+## Session — May 20, 2026 — SAUCE beta signup
+
+### What got done
+
+- Added a new public beta landing page at `/beta` inside `apps/web`.
+- Added a `/api/waitlist` route handler that validates `email`, `archetype`, `yearsPlaying`, and optional `referrer`.
+- Switched the beta form to POST to `/api/waitlist` instead of writing directly from the browser to Supabase.
+- Added service-role waitlist upsert logic plus returned waitlist position counts for the frontend success state.
+- Added middleware handling so requests for `beta.guitarmalade.com` rewrite to `/beta`.
+- Added a Supabase migration at `supabase/migrations/0004_waitlist.sql` for the `waitlist` table with RLS enabled and no direct client insert policy.
+- Verified the web app with `pnpm --filter @sauce/web build` and a follow-up `pnpm --filter @sauce/web typecheck`.
+
+### What still needs to happen
+
+- Apply `supabase/migrations/0004_waitlist.sql` to the live Supabase project. This shell does not have a `SUPABASE_ACCESS_TOKEN`, so `supabase projects list` / remote migration push could not be completed.
+- Log Vercel into this shell, then deploy `apps/web` and attach `beta.guitarmalade.com`. `vercel whoami` started the device-login flow because no local Vercel credentials are present here.
+
+### Follow-up
+
+- Applied the `waitlist` table schema to the live Supabase project through the Supabase management API.
+- Configured the Vercel project for the pnpm monorepo:
+  - `rootDirectory: apps/web`
+  - `installCommand: cd ../.. && pnpm install --frozen-lockfile`
+  - `buildCommand: cd ../.. && pnpm --filter @sauce/web build`
+  - `nodeVersion: 22.x`
+- Added `.vercelignore` at the repo root so Vercel does not upload local-only large directories like `node_modules`, `.chrome-devtools`, and `references`.
+- Added `outputFileTracingRoot` in `apps/web/next.config.mjs` so Next traces workspace files from the repo root in production builds.
+- Deployed the web app successfully to production on Vercel at `https://web-532lilvhh-schreinerchris-4625s-projects.vercel.app`.
+- Attached `beta.guitarmalade.com` to the Vercel project.
+- Verified the deployed `/api/waitlist` route by posting a real test submission through `vercel curl`, confirmed the row landed in `public.waitlist`, then deleted that test row to keep production data clean.
+
+### What still needs to happen
+
+- Point `beta.guitarmalade.com` to Vercel with `A beta.guitarmalade.com 76.76.21.21` at the current DNS provider, or switch the domain nameservers to Vercel.
+- After DNS propagates, verify that `https://beta.guitarmalade.com` resolves publicly, loads `/beta` without Vercel authentication, and that the form submits end-to-end on the custom domain.
+
+### Follow-up
+
+- Added Resend-backed waitlist email sending inside `apps/web/src/app/api/waitlist/route.ts`.
+- The route now sends:
+  - a user welcome email with archetype-specific copy and the beta YouTube VSL link
+  - a founder notification email to `schreiner.chris@gmail.com`
+- Email failures are intentionally non-blocking and only log errors after the waitlist row is saved.
+- Added `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, and `BETA_WAITLIST_NOTIFY_TO` to both `.env.example` files.
+- Deployed the email-enabled build to production at `https://web-68woepyvp-schreinerchris-4625s-projects.vercel.app`.
+- Verified live behavior:
+  - `POST /api/waitlist` still writes to `public.waitlist`
+  - founder notification arrives in Gmail
+  - welcome email arrives in Gmail when the recipient is exactly `schreiner.chris@gmail.com`
+- Important Resend limitation still in effect:
+  - with `onboarding@resend.dev` as the sender, Resend rejects `schreiner.chris+test@gmail.com` with `403` because the sender domain is not verified yet
+  - once `guitarmalade.com` is verified in Resend and `RESEND_FROM_EMAIL` is switched to `hello@guitarmalade.com`, the plus-alias smoke test can be rerun successfully
+- Cleaned both smoke-test rows back out of `public.waitlist` after verification so production data stays clean.
+- Refined the welcome email to a plain personal note from `Chris` with the lowercase subject `you're in`.
+- Refined the founder notification into a dark, brand-colored summary with the new headline and action-link footer.
+- Updated the live production sender display name to `Chris <onboarding@resend.dev>` while `guitarmalade.com` remains unverified.
+- Current Resend domain status for `guitarmalade.com`: `Pending` because the DKIM record is still not verified. SPF and MX are already verified.
