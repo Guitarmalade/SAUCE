@@ -76,14 +76,14 @@ export function FounderCallCTA({ className = 'mt-6' }: { className?: string }) {
           />
           <div className="sm:hidden">
             <p className="label-eyebrow text-navy/55">Founder Call</p>
-            <h3 className="text-xl font-extrabold leading-tight text-navy">Book 15 minutes with Chris</h3>
+            <h3 className="text-xl font-extrabold leading-tight text-navy">Book a call with Chris</h3>
           </div>
         </div>
 
         <div>
           <div className="hidden sm:block">
             <p className="label-eyebrow text-navy/55">Founder Call</p>
-            <h3 className="text-2xl font-extrabold leading-tight text-navy">Book 15 minutes with Chris</h3>
+            <h3 className="text-2xl font-extrabold leading-tight text-navy">Book a call with Chris</h3>
           </div>
           <p className="mt-3 text-sm leading-relaxed text-navy/70">
             Bring your goals, current roadblocks, and what you want SAUCE to solve. Early beta feedback
