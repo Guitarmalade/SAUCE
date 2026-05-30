@@ -1,4 +1,4 @@
-import { createClient } from '../../../utils/supabase/server'
+import { createClient } from '../../../lib/supabase/server'
 import { logout } from '@/app/auth/actions'
 import { LogOut, Target, Clock, Music, Trophy, Sparkles, Map as MapIcon, Edit, Flame, Briefcase, Activity } from 'lucide-react'
 import Link from 'next/link'
