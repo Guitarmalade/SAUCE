@@ -1,4 +1,4 @@
-import { createClient } from '../../../lib/supabase/server'
+import { createClient } from '../../_supabase/server'
 import { revalidatePath } from 'next/cache'
 
 export default async function TeacherAssignmentsPage() {

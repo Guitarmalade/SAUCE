@@ -1,4 +1,4 @@
-import { createClient } from '../../../lib/supabase/server'
+import { createClient } from '../../_supabase/server'
 import { logout } from '@/app/auth/actions'
 import Link from 'next/link'
 

@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { updateSession } from './lib/supabase/middleware'
+import { updateSession } from './app/_supabase/middleware'
 
 export async function middleware(request: NextRequest) {
   const host = request.headers.get('host')?.split(':')[0]

@@ -1,4 +1,4 @@
-import { createClient } from '../../../lib/supabase/server'
+import { createClient } from '../../_supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, PlayCircle } from 'lucide-react'

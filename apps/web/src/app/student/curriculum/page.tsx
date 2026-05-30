@@ -1,4 +1,4 @@
-import { createClient } from '../../../lib/supabase/server'
+import { createClient } from '../../_supabase/server'
 import CurriculumMap from './CurriculumMap'
 
 export default async function StudentCurriculumPage() {
