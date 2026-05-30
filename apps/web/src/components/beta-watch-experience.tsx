@@ -1,12 +1,11 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { CalendarClock, ExternalLink } from 'lucide-react'
 
 export const founderCallUrl = 'https://calendly.com/chris-guitarmalade/guitarmalade-call'
 const founderHeadshotUrl =
   'https://cdn.prod.website-files.com/642e7ef447d6adbabfead056/6446140c1c8ecc626430967b_pic.jpg'
-const betaVideoPlayerId = 'sauce-beta-vsl-player'
 const betaVideoUrl =
   'https://www.youtube.com/embed/DIrE2cQ1yyU?autoplay=1&rel=0&modestbranding=1&enablejsapi=1'
 
@@ -108,6 +107,8 @@ export function FounderCallCTA({ className = 'mt-6' }: { className?: string }) {
 }
 
 export function BetaVslPlayer({ className = 'mt-6' }: { className?: string }) {
+  const reactId = useId()
+  const playerId = `sauce-beta-vsl-player-${reactId.replace(/[^a-zA-Z0-9_-]/g, '')}`
   const playerRef = useRef<YouTubePlayer | null>(null)
   const [videoEnded, setVideoEnded] = useState(false)
 
@@ -119,10 +120,10 @@ export function BetaVslPlayer({ className = 'mt-6' }: { className?: string }) {
         return
       }
 
-      playerRef.current = new window.YT.Player(betaVideoPlayerId, {
+      playerRef.current = new window.YT.Player(playerId, {
         events: {
           onStateChange: (event) => {
-            if (event.data === (window.YT?.PlayerState?.ENDED ?? 0)) {
+            if (event.data === 0) {
               setVideoEnded(true)
             }
           },
@@ -135,13 +136,16 @@ export function BetaVslPlayer({ className = 'mt-6' }: { className?: string }) {
       playerRef.current?.destroy()
       playerRef.current = null
     }
-  }, [])
+  }, [playerId])
 
   return (
-    <div className={`${className} overflow-hidden rounded-[24px] border border-navy/10 bg-navy shadow-[0_18px_44px_rgba(26,35,64,0.18)]`}>
+    <div
+      className={`${className} overflow-hidden rounded-[24px] border border-navy/10 bg-navy shadow-[0_18px_44px_rgba(26,35,64,0.18)]`}
+      data-testid="beta-vsl-player"
+    >
       <div className="relative aspect-video">
         <iframe
-          id={betaVideoPlayerId}
+          id={playerId}
           className="h-full w-full"
           src={betaVideoUrl}
           title="SAUCE beta video"
@@ -150,7 +154,10 @@ export function BetaVslPlayer({ className = 'mt-6' }: { className?: string }) {
         />
 
         {videoEnded ? (
-          <div className="absolute inset-0 flex items-center justify-center bg-navy/95 p-5 text-center text-white">
+          <div
+            className="absolute inset-0 z-10 flex items-center justify-center bg-navy/95 p-5 text-center text-white"
+            data-testid="beta-vsl-ended-overlay"
+          >
             <div className="max-w-sm">
               <p className="label-eyebrow text-white/55">Next Step</p>
               <h3 className="mt-2 text-2xl font-extrabold leading-tight">Talk through your guitar goals with Chris</h3>
