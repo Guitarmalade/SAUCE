@@ -2,6 +2,7 @@
 
 import { type FormEvent, useEffect, useState } from 'react'
 import { CheckCircle2, Loader2 } from 'lucide-react'
+import { BetaVslPlayer, FounderCallCTA } from '@/components/beta-watch-experience'
 
 const archetypeOptions = [
   { value: 'shredFanatic', label: 'Shred fanatic' },
@@ -143,21 +144,10 @@ export default function BetaSignupForm() {
           <h2 className="text-3xl font-extrabold text-navy">Your seat is saved.</h2>
           <p className="text-base leading-relaxed text-navy/70">
             {message}
-            {position !== null ? ` Current beta position: #${position}.` : ''}
           </p>
         </div>
 
-        <div className="mt-6 overflow-hidden rounded-[24px] border border-navy/10 bg-navy shadow-[0_18px_44px_rgba(26,35,64,0.18)]">
-          <div className="aspect-video">
-            <iframe
-              className="h-full w-full"
-              src="https://www.youtube.com/embed/DIrE2cQ1yyU?autoplay=1&rel=0&modestbranding=1"
-              title="SAUCE beta video"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            />
-          </div>
-        </div>
+        <BetaVslPlayer />
 
         <div className="mt-5 rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-800">
           <div className="flex items-start gap-2">
@@ -165,6 +155,15 @@ export default function BetaSignupForm() {
             <p>Watch the short VSL while you wait for the beta invite.</p>
           </div>
         </div>
+
+        <FounderCallCTA />
+
+        {position !== null ? (
+          <div className="mt-5 rounded-2xl border border-navy/10 bg-white/80 px-4 py-3 text-sm font-medium text-navy/75">
+            Current beta position:{' '}
+            <span className="font-extrabold text-navy">#{position}</span>
+          </div>
+        ) : null}
 
         <p className="mt-5 text-xs leading-relaxed text-navy/55">
           Keep this tab if you want the fast overview right now. Your spot is already recorded.

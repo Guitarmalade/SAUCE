@@ -13,7 +13,7 @@ const allowedArchetypes = new Set([
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const resendApiUrl = 'https://api.resend.com/emails'
-const betaVslUrl = 'https://www.youtube.com/watch?v=DIrE2cQ1yyU'
+const betaWatchUrl = 'https://guitarmalade.com/watch'
 const brandInk = '#141A36'
 const brandCream = '#FCF6E8'
 const brandMarmalade = '#F5A623'
@@ -237,7 +237,7 @@ function buildWelcomeEmail(archetype: string, position: number) {
           </p>
           <p style="margin:0 0 18px;font-size:17px;line-height:1.75;color:${brandInk};">
             if you want the quick overview, watch this:
-            <a href="${betaVslUrl}" style="color:${brandInk};font-weight:700;text-decoration:underline;">${betaVslUrl}</a>
+            <a href="${betaWatchUrl}" style="color:${brandInk};font-weight:700;text-decoration:underline;">▶ Watch the 4-minute overview →</a>
           </p>
           <p style="margin:0 0 18px;font-size:17px;line-height:1.75;color:${brandInk};">
             when your wave opens, i'll send the invite here.
@@ -260,7 +260,8 @@ that gives me a pretty good read on what you're hearing, what you're chasing, an
 i'm opening this up in waves so i can keep it personal, see how people actually practice, and make the thing better before i widen the circle.
 
 if you want the quick overview, watch this:
-${betaVslUrl}
+▶ Watch the 4-minute overview →
+${betaWatchUrl}
 
 when your wave opens, i'll send the invite here.
 
