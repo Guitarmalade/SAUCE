@@ -13,7 +13,7 @@ const allowedArchetypes = new Set([
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const resendApiUrl = 'https://api.resend.com/emails'
-const betaWatchUrl = 'https://guitarmalade.com/watch'
+const betaWatchUrl = 'https://beta.guitarmalade.com/watch'
 const brandInk = '#141A36'
 const brandCream = '#FCF6E8'
 const brandMarmalade = '#F5A623'
