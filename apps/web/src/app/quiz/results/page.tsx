@@ -1,9 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import { Guitar, Fingerprint, ArrowRight, Music, Activity } from 'lucide-react'
 import { SplatBackdrop, Splat } from '@/components/ui/Splats'
+import { EMAIL_REGEX, submitQuizResult } from '@/lib/quiz-webhook'
 
 const ELEMENTS = [
   { id: 'fretboard', label: 'Fretboard Awareness' },
@@ -16,6 +17,11 @@ const ELEMENTS = [
 export default function ResultsPage() {
   const router = useRouter()
   const [data, setData] = useState<any>(null)
+  const [firstName, setFirstName] = useState('')
+  const [email, setEmail] = useState('')
+  const [emailTouched, setEmailTouched] = useState(false)
+  const [hasSubmitted, setHasSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     const saved = localStorage.getItem('avatar_data')
@@ -26,6 +32,33 @@ export default function ResultsPage() {
 
   const handleBuildRoadmap = () => {
     router.push('/student/dashboard')
+  }
+
+  const emailIsValid = EMAIL_REGEX.test(email.trim())
+  const canSubmit = !!data && emailIsValid && !hasSubmitted && !isSubmitting
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setEmailTouched(true)
+    if (!data || !emailIsValid || hasSubmitted || isSubmitting) return
+
+    setHasSubmitted(true)
+    setIsSubmitting(true)
+
+    void submitQuizResult({
+      firstName,
+      email,
+      archetype: data.archetype,
+      scores: data.currentStats,
+      answers: {
+        archetype: data.archetype,
+        genre: data.genre,
+        idealStats: data.idealStats,
+        selectedTricks: data.selectedTricks,
+      },
+    }).finally(() => {
+      setIsSubmitting(false)
+    })
   }
 
   if (!data) return (
@@ -39,6 +72,72 @@ export default function ResultsPage() {
   )
 
   const { archetype, genre, currentStats, idealStats, selectedTricks } = data
+
+  if (!hasSubmitted) {
+    return (
+      <div className="min-h-screen bg-[var(--bg)] relative overflow-hidden flex items-center justify-center p-6">
+        <SplatBackdrop intensity="heavy" palette="warm" />
+
+        <div className="relative z-10 w-full max-w-xl">
+          <div className="bg-[var(--cream-warm)] border-[3px] border-[var(--ink)] shadow-[var(--shadow-pop)] rounded-[var(--r-lg)] p-8 md:p-10 space-y-8">
+            <div className="text-center space-y-4">
+              <div className="inline-block p-4 rounded-[var(--r-md)] bg-[var(--cream-warm)] border-[3px] border-[var(--ink)] shadow-[var(--shadow-pop)] rotate-3">
+                <Fingerprint className="w-12 h-12 text-[var(--ink)]" />
+              </div>
+              <div>
+                <h1 className="drip-text text-[48px] text-[var(--ink)] leading-none">See Your Result</h1>
+                <p className="mt-4 text-lg font-bold text-[var(--ink-mid)]">
+                  Enter your email to unlock your quiz result. First name is optional, but useful.
+                </p>
+              </div>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <label className="space-y-2">
+                  <span className="block text-sm font-black uppercase tracking-wide text-[var(--ink)]">First name</span>
+                  <input
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className="w-full px-4 py-4 rounded-2xl border-2 border-[var(--cream-shadow)] bg-white text-[var(--ink)] font-bold focus:outline-none focus:border-[var(--ink)]"
+                    placeholder="Chris"
+                    autoComplete="given-name"
+                  />
+                </label>
+
+                <label className="space-y-2">
+                  <span className="block text-sm font-black uppercase tracking-wide text-[var(--ink)]">Email</span>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    onBlur={() => setEmailTouched(true)}
+                    className="w-full px-4 py-4 rounded-2xl border-2 border-[var(--cream-shadow)] bg-white text-[var(--ink)] font-bold focus:outline-none focus:border-[var(--ink)]"
+                    placeholder="you@example.com"
+                    autoComplete="email"
+                    required
+                  />
+                </label>
+              </div>
+
+              {emailTouched && email.trim() && !emailIsValid ? (
+                <p className="text-sm font-bold text-[var(--punch)]">Enter a valid email address.</p>
+              ) : null}
+
+              <button
+                type="submit"
+                disabled={!canSubmit}
+                className="w-full py-5 rounded-2xl bg-[var(--marmalade)] text-[var(--cream-warm)] font-black text-xl flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none shadow-[4px_4px_0_var(--ink)] hover:-translate-y-1 transition-transform active:translate-y-0 cursor-pointer border-none"
+              >
+                {isSubmitting ? 'Unlocking...' : 'See My Result'} <ArrowRight className="w-6 h-6 stroke-[3]" />
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-[var(--bg)] relative overflow-hidden pb-20 pt-10">

@@ -90,7 +90,7 @@ export default function AvatarQuiz() {
     if (typeof window !== 'undefined') {
       localStorage.setItem('avatar_data', JSON.stringify({ archetype, genre, currentStats, idealStats, selectedTricks }))
     }
-    router.push('/quiz/results')
+    router.push(`/quiz/results${window.location.search}` as any)
   }
 
   return (
