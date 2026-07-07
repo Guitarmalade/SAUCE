@@ -4,7 +4,6 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import { Guitar, Fingerprint, ArrowRight, Music, Activity } from 'lucide-react'
 import { SplatBackdrop, Splat } from '@/components/ui/Splats'
-import { EMAIL_REGEX, submitQuizResult } from '@/lib/quiz-webhook'
 
 const ELEMENTS = [
   { id: 'fretboard', label: 'Fretboard Awareness' },
@@ -21,7 +20,6 @@ export default function ResultsPage() {
   const [email, setEmail] = useState('')
   const [emailTouched, setEmailTouched] = useState(false)
   const [hasSubmitted, setHasSubmitted] = useState(false)
-  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     const saved = localStorage.getItem('avatar_data')
@@ -34,31 +32,14 @@ export default function ResultsPage() {
     router.push('/student/dashboard')
   }
 
-  const emailIsValid = EMAIL_REGEX.test(email.trim())
-  const canSubmit = !!data && emailIsValid && !hasSubmitted && !isSubmitting
+  const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
+  const canSubmit = !!data && emailIsValid && !hasSubmitted
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setEmailTouched(true)
-    if (!data || !emailIsValid || hasSubmitted || isSubmitting) return
-
+    if (!data || !emailIsValid || hasSubmitted) return
     setHasSubmitted(true)
-    setIsSubmitting(true)
-
-    void submitQuizResult({
-      firstName,
-      email,
-      archetype: data.archetype,
-      scores: data.currentStats,
-      answers: {
-        archetype: data.archetype,
-        genre: data.genre,
-        idealStats: data.idealStats,
-        selectedTricks: data.selectedTricks,
-      },
-    }).finally(() => {
-      setIsSubmitting(false)
-    })
   }
 
   if (!data) return (
@@ -130,7 +111,7 @@ export default function ResultsPage() {
                 disabled={!canSubmit}
                 className="w-full py-5 rounded-2xl bg-[var(--marmalade)] text-[var(--cream-warm)] font-black text-xl flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none shadow-[4px_4px_0_var(--ink)] hover:-translate-y-1 transition-transform active:translate-y-0 cursor-pointer border-none"
               >
-                {isSubmitting ? 'Unlocking...' : 'See My Result'} <ArrowRight className="w-6 h-6 stroke-[3]" />
+                See My Result <ArrowRight className="w-6 h-6 stroke-[3]" />
               </button>
             </form>
           </div>
