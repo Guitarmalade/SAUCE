@@ -413,8 +413,8 @@ export default function SauceDiagnosticQuiz() {
                 Find the fretboard bottleneck that is actually blocking you.
               </h1>
               <p className="max-w-2xl text-base leading-relaxed text-navy/72 md:text-lg">
-                Four questions diagnose the block. Then I’ll show you the result, ask for email once, and
-                qualify the lead with a few follow-up questions.
+                Four quick questions. Then get your personalized result and a clear path to break through - no more
+                guessing what to practice.
               </p>
             </div>
 
