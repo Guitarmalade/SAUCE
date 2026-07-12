@@ -417,11 +417,6 @@ export default function SauceDiagnosticQuiz() {
                 guessing what to practice.
               </p>
             </div>
-
-            <div className="flex flex-wrap gap-3 text-sm font-semibold text-navy/70">
-              <span className="rounded-full border border-navy/10 bg-white px-4 py-2">Public quiz</span>
-              <span className="rounded-full border border-navy/10 bg-white px-4 py-2">Teacher dashboard stays at /teacher/dashboard</span>
-            </div>
           </div>
         </header>
 
