@@ -283,6 +283,7 @@ export default function SauceDiagnosticQuiz() {
   const [gateEmail, setGateEmail] = useState('')
   const [gateTouched, setGateTouched] = useState(false)
   const [submittedGate, setSubmittedGate] = useState(false)
+  const [isGateSubmitting, setIsGateSubmitting] = useState(false)
   const [part2, setPart2] = useState<Part2Answers>({
     q5: '',
     q6: '',
@@ -292,6 +293,7 @@ export default function SauceDiagnosticQuiz() {
   })
   const [finalSubmitted, setFinalSubmitted] = useState(false)
   const [isFinalSubmitting, setIsFinalSubmitting] = useState(false)
+  const [leadSubmitError, setLeadSubmitError] = useState('')
 
   const diagnosticOutcome = useMemo(() => computeDiagnosticOutcome(diagnosticAnswers), [diagnosticAnswers])
   const selectedArchetype = diagnosticOutcome.archetype
@@ -324,22 +326,32 @@ export default function SauceDiagnosticQuiz() {
     setStage('gate')
   }
 
-  const handleGateSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleGateSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setGateTouched(true)
-    if (!gateEmailValid || !selectedArchetype) return
+    if (!gateEmailValid || !selectedArchetype || isGateSubmitting) return
 
-    setSubmittedGate(true)
-    void submitQuizResult({
-      phase: 'gate',
-      email: gateEmail.trim().toLowerCase(),
-      firstName: gateFirstName.trim(),
-      archetype: selectedArchetype,
-      source: 'sauce_diagnostic_quiz',
-      timestamp: new Date().toISOString(),
-    })
+    setIsGateSubmitting(true)
+    setLeadSubmitError('')
 
-    setStage('result')
+    try {
+      await submitQuizResult({
+        phase: 'gate',
+        email: gateEmail.trim().toLowerCase(),
+        firstName: gateFirstName.trim(),
+        archetype: selectedArchetype,
+        source: 'sauce_diagnostic_quiz',
+        timestamp: new Date().toISOString(),
+      })
+
+      setSubmittedGate(true)
+      setStage('result')
+    } catch (error) {
+      console.error('SauceDiagnostic gate lead failed:', error)
+      setLeadSubmitError('Could not send the lead. Please try again.')
+    } finally {
+      setIsGateSubmitting(false)
+    }
   }
 
   const toggleStyle = (style: string) => {
@@ -349,35 +361,42 @@ export default function SauceDiagnosticQuiz() {
     }))
   }
 
-  const handleFinalSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleFinalSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (!canSubmitFinal || !selectedArchetype) return
 
     setIsFinalSubmitting(true)
+    setLeadSubmitError('')
 
-    void submitQuizResult({
-      phase: 'final',
-      email: gateEmail.trim().toLowerCase(),
-      firstName: gateFirstName.trim(),
-      archetype: selectedArchetype,
-      experience: part2.q5,
-      practiceTime: part2.q6,
-      styles: part2.q7,
-      blocker: part2.q8,
-      readiness: part2.q9,
-      leadScore,
-      answers: {
-        q1: diagnosticAnswers.q1,
-        q2: diagnosticAnswers.q2,
-        q3: diagnosticAnswers.q3,
-        q4: diagnosticAnswers.q4,
-      },
-      source: 'sauce_diagnostic_quiz',
-      timestamp: new Date().toISOString(),
-    }).finally(() => {
-      setIsFinalSubmitting(false)
+    try {
+      await submitQuizResult({
+        phase: 'final',
+        email: gateEmail.trim().toLowerCase(),
+        firstName: gateFirstName.trim(),
+        archetype: selectedArchetype,
+        experience: part2.q5,
+        practiceTime: part2.q6,
+        styles: part2.q7,
+        blocker: part2.q8,
+        readiness: part2.q9,
+        leadScore,
+        answers: {
+          q1: diagnosticAnswers.q1,
+          q2: diagnosticAnswers.q2,
+          q3: diagnosticAnswers.q3,
+          q4: diagnosticAnswers.q4,
+        },
+        source: 'sauce_diagnostic_quiz',
+        timestamp: new Date().toISOString(),
+      })
+
       setFinalSubmitted(true)
-    })
+    } catch (error) {
+      console.error('SauceDiagnostic final lead failed:', error)
+      setLeadSubmitError('Could not send the lead. Please try again.')
+    } finally {
+      setIsFinalSubmitting(false)
+    }
   }
 
   return (
@@ -474,16 +493,17 @@ export default function SauceDiagnosticQuiz() {
 
                 <button
                   type="submit"
-                  disabled={!gateEmailValid || submittedGate}
+                  disabled={!gateEmailValid || submittedGate || isGateSubmitting}
                   className="inline-flex items-center justify-center gap-2 rounded-2xl border-none bg-amber-500 px-6 py-4 font-black text-white transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  Unlock result
+                  {isGateSubmitting ? 'Sending...' : 'Unlock result'}
                   <ChevronRight className="h-5 w-5" />
                 </button>
               </form>
               {gateTouched && gateEmail.trim() && !gateEmailValid ? (
                 <p className="mt-3 text-sm font-semibold text-red-600">Enter a valid email address.</p>
               ) : null}
+              {leadSubmitError ? <p className="mt-3 text-sm font-semibold text-red-600">{leadSubmitError}</p> : null}
             </SectionCard>
           </>
         ) : null}
@@ -620,6 +640,11 @@ export default function SauceDiagnosticQuiz() {
                 {finalSubmitted ? (
                   <div className="rounded-[24px] border border-emerald-200 bg-emerald-50 p-6 text-emerald-900">
                     Lead sent.
+                  </div>
+                ) : null}
+                {leadSubmitError ? (
+                  <div className="rounded-[24px] border border-red-200 bg-red-50 p-6 text-red-800">
+                    {leadSubmitError}
                   </div>
                 ) : null}
 
